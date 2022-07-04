@@ -3,10 +3,9 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port          string `mapstructure:"PORT"`
-	AuthSvcUrl    string `mapstructure:"AUTH_SVC_URL"`
-	ProductSvcUrl string `mapstructure:"PRODUCT_SVC_URL"`
-	OrderSvcUrl   string `mapstructure:"ORDER_SVC_URL"`
+	Port                      string `mapstructure:"PORT"`
+	GrpcAuthenticationService string `mapstructure:"grpc_authentication_service"`
+	PersonalWebsiteServices   string `mapstructure:"personal_website_services"`
 }
 
 func LoadConfig() (c Config, err error) {
