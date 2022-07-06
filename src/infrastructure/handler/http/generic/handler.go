@@ -3,23 +3,33 @@ package generic
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/platform/httpclient"
+	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 	"log"
 	"net/http"
 	"strings"
 )
 
-func HandlerManager(ctx *gin.Context, c config.Config) {
+func HandlerManager(ctx *gin.Context, routes *[]route.Route) {
 	path := ctx.Param("proxyPath")
 	fmt.Println(path)
 
-	if isPathMatch(path, "api/ext/v1") {
-		err := httpclient.HttpPassThrough(c.PersonalWebsiteServices, ctx)
-		if err != nil {
-			log.Fatal("Error al invocar al servicio ", c.PersonalWebsiteServices+path, err)
+	validRoute := false
+	for _, routeItem := range *routes {
+		fmt.Println(routeItem)
+		if routeItem.TypeTarget() == "http" {
+			if isPathMatch(path, routeItem.RelativePath()) {
+				validRoute = true
+				err := httpclient.HttpPassThrough(routeItem.UrlTarget(), ctx)
+				if err != nil {
+					log.Fatal("Error al invocar al servicio ", routeItem.UrlTarget()+path, err)
+					ctx.AbortWithStatus(http.StatusBadGateway)
+				}
+			}
 		}
-	} else {
+	}
+
+	if !validRoute {
 		ctx.AbortWithStatus(http.StatusNotFound)
 	}
 }

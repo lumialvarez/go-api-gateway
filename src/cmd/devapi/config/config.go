@@ -4,6 +4,7 @@ import "github.com/spf13/viper"
 
 type Config struct {
 	Port                      string `mapstructure:"PORT"`
+	DBUrl                     string `mapstructure:"DB_URL"`
 	GrpcAuthenticationService string `mapstructure:"grpc_authentication_service"`
 	PersonalWebsiteServices   string `mapstructure:"personal_website_services"`
 }
