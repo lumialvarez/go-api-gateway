@@ -6,6 +6,7 @@ FROM golang:alpine
 RUN apk update && apk add --no-cache git && apk add --no-cach bash && apk add build-base
 
 RUN export GIN_MODE=release
+RUN export SCOPE=prod
 
 # Setup folders
 RUN mkdir /app
