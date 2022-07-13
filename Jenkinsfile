@@ -63,7 +63,7 @@ pipeline {
 				
 				sh "ssh ${SSH_MAIN_SERVER} 'cd ${REMOTE_HOME}/tmp_jenkins/${JOB_NAME} ; sudo docker build . -t go-api-gateway'"
 
-				sh "ssh ${SSH_MAIN_SERVER} 'sudo docker run --name go-api-gateway --add-host=lmalvarez.com:${INTERNAL_IP} -p 9192:9191 -d --restart unless-stopped go-api-gateway:latest'"
+				sh "ssh ${SSH_MAIN_SERVER} 'sudo docker run --name go-api-gateway --add-host=lmalvarez.com:${INTERNAL_IP} -p 9192:9191 -e SCOPE='prod' -d --restart unless-stopped go-api-gateway:latest'"
 			}
 		}
 	}
