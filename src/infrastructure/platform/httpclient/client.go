@@ -10,6 +10,12 @@ func HttpPassThrough(urlBase string, ctx *gin.Context) error {
 	path := ctx.Param("proxyPath")
 	client := &http.Client{}
 	request, err := http.NewRequest(ctx.Request.Method, urlBase+path, ctx.Request.Body)
+	for name, values := range ctx.Request.Header {
+		// Loop over all values for the name.
+		for _, value := range values {
+			request.Header.Set(name, value)
+		}
+	}
 	if err != nil {
 		return err
 	}
