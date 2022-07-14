@@ -1,17 +1,14 @@
 pipeline {
 	agent any
+	tools {
+        jdk 'JDK'
+    }
 	environment {
 		SSH_MAIN_SERVER = credentials("SSH_MAIN_SERVER")
 	
 		DATASOURCE_URL = credentials("DATASOURCE_URL")
 		DATASOURCE_USERNAME = credentials("DATASOURCE_USERNAME")
 		DATASOURCE_PASSWORD = credentials("DATASOURCE_PASSWORD")
-		JWT_SECRET = credentials("JWT_SECRET")
-		
-		DATASOURCE_URL_PRUEBAS = credentials("DATASOURCE_URL_PRUEBAS")
-		DATASOURCE_USERNAME_PRUEBAS = credentials("DATASOURCE_USERNAME_PRUEBAS")
-		DATASOURCE_PASSWORD_PRUEBAS = credentials("DATASOURCE_PASSWORD_PRUEBAS")
-		JWT_SECRET_PRUEBAS = credentials("JWT_SECRET_PRUEBAS")
 	}
 	stages {
 		stage('Get Version') {
@@ -51,6 +48,14 @@ pipeline {
 						returnStdout: true
 					).trim()
 				}
+
+
+                sh 'java ReplaceSecrets.java DATASOURCE_URL $DATASOURCE_URL'
+                sh 'java ReplaceSecrets.java DATASOURCE_USERNAME $DATASOURCE_USERNAME'
+                sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
+                sh 'cat src/cmd/devapi/config/envs/prod.env'
+
+
 				sh "echo '${BUILD_TAG}' > BUILD_TAG.txt"
 				
 				sh "ssh ${SSH_MAIN_SERVER} 'sudo rm -rf ${REMOTE_HOME}/tmp_jenkins/${JOB_NAME}'"

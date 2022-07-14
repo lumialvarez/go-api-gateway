@@ -29,11 +29,13 @@ func Start() {
 
 	r := gin.Default()
 
-	r.GET("/*proxyPath", func(ctx *gin.Context) { generic.HandlerManager(ctx, &routes) })
-	r.POST("/*proxyPath", func(ctx *gin.Context) { generic.HandlerManager(ctx, &routes) })
-	r.PUT("/*proxyPath", func(ctx *gin.Context) { generic.HandlerManager(ctx, &routes) })
-	r.DELETE("/*proxyPath", func(ctx *gin.Context) { generic.HandlerManager(ctx, &routes) })
-	r.HEAD("/*proxyPath", func(ctx *gin.Context) { generic.HandlerManager(ctx, &routes) })
+	genericHandler := func(ctx *gin.Context) { generic.HandlerManager(ctx, &routes, config) }
+
+	r.GET("/*proxyPath", genericHandler)
+	r.POST("/*proxyPath", genericHandler)
+	r.PUT("/*proxyPath", genericHandler)
+	r.DELETE("/*proxyPath", genericHandler)
+	r.HEAD("/*proxyPath", genericHandler)
 
 	//authSvc := *auth.RegisterRoutes(r, &config)
 	//product.RegisterRoutes(r, &config, &authSvc)
