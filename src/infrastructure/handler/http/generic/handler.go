@@ -16,6 +16,7 @@ import (
 func HandlerManager(ctx *gin.Context, routes *[]domainRoute.Route, config config.Config) {
 	path := ctx.Param("proxyPath")
 	method := ctx.Request.Method
+	ctx.Header("Access-Control-Allow-Origin", "*")
 	fmt.Println(path)
 
 	validRoute := false
