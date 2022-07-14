@@ -14,16 +14,16 @@ pipeline {
 		stage('Get Version') {
 			steps {
 				/*script {
-					MAVEN_VERSION = sh (
+					APP_VERSION = sh (
 						script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
 						returnStdout: true
 					).trim()
 				}*/
 				script {
-                    MAVEN_VERSION = "1.0.0"
+                    APP_VERSION = "1.0.0"
                 }
 				script {
-					currentBuild.displayName = "#" + currentBuild.number + " - v" + MAVEN_VERSION
+					currentBuild.displayName = "#" + currentBuild.number + " - v" + APP_VERSION
 				}
 			}
 		}
