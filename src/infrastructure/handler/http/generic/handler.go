@@ -30,6 +30,7 @@ func HandlerManager(ctx *gin.Context, routes *[]domainRoute.Route, config config
 					log.Print("Error al invocar al servicio ", routeItem.UrlTarget()+path, err)
 					ctx.AbortWithStatus(http.StatusBadGateway)
 				}
+				break
 			}
 		}
 	}

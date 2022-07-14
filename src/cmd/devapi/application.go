@@ -36,6 +36,7 @@ func Start() {
 	r.PUT("/*proxyPath", genericHandler)
 	r.DELETE("/*proxyPath", genericHandler)
 	r.HEAD("/*proxyPath", genericHandler)
+	r.OPTIONS("/*proxyPath", genericHandler)
 
 	//authSvc := *auth.RegisterRoutes(r, &config)
 	//product.RegisterRoutes(r, &config, &authSvc)
