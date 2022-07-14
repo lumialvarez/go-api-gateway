@@ -50,7 +50,7 @@ pipeline {
 				}
 
 
-                sh 'java ReplaceSecrets.java DATASOURCE_URL_CLEARED DATASOURCE_URL_CLEARED'
+                sh 'java ReplaceSecrets.java DATASOURCE_URL_CLEARED $DATASOURCE_URL_CLEARED'
                 sh 'java ReplaceSecrets.java DATASOURCE_USERNAME $DATASOURCE_USERNAME'
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
