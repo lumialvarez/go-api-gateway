@@ -15,7 +15,7 @@ pipeline {
 			steps {
 				script {
 					APP_VERSION = sh (
-						script: "grep -m 1 -Po '[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md",
+						script: '''grep -m 1 -Po '[0-9]+[.][0-9]+[.][0-9]+' CHANGELOG.md ''',
 						returnStdout: true
 					).trim()
 				}
