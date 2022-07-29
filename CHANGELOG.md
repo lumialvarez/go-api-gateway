@@ -4,6 +4,10 @@ API Gateway
 ## [Unreleased]
 - gRCP Calls
 
+## [1.0.1] - 28/07/2022
+### Fix
+- Pipeline version
+
 ## [1.0.0] - 14/07/2022
 ### Added
 - Dynamic routing from database (http)

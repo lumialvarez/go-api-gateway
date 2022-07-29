@@ -13,15 +13,12 @@ pipeline {
 	stages {
 		stage('Get Version') {
 			steps {
-				/*script {
+				script {
 					APP_VERSION = sh (
-						script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
+						script: "grep -m 1 -Po '[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md",
 						returnStdout: true
 					).trim()
-				}*/
-				script {
-                    APP_VERSION = "1.0.0"
-                }
+				}
 				script {
 					currentBuild.displayName = "#" + currentBuild.number + " - v" + APP_VERSION
 				}

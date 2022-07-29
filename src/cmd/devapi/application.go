@@ -40,7 +40,6 @@ func Start() {
 
 	//authSvc := *auth.RegisterRoutes(r, &config)
 	//product.RegisterRoutes(r, &config, &authSvc)
-	//order.RegisterRoutes(r, &config, &authSvc)
 	r.Run(config.Port)
 
 }
