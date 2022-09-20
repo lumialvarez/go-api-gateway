@@ -7,6 +7,6 @@ import (
 
 type Mapper struct{}
 
-func (m Mapper) ToDomain(daoRoute dao.Route) route.Route {
+func (m Mapper) ToDomain(daoRoute dao.Route) *route.Route {
 	return route.NewRoute(daoRoute.Id, daoRoute.RelativePath, daoRoute.UrlTarget, daoRoute.TypeTarget, daoRoute.Enable)
 }

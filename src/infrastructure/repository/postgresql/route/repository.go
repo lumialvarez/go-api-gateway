@@ -17,7 +17,7 @@ func Init(config config.Config) Repository {
 	return Repository{postgresql: postgresql.Init(config.DBUrl), mapper: mapper.Mapper{}}
 }
 
-func (repository *Repository) GetAll() ([]route.Route, error) {
+func (repository *Repository) GetAll() (*[]route.Route, error) {
 	var daoRoutes []dao.Route
 	result := repository.postgresql.DB.Find(&daoRoutes)
 	if result.Error != nil {
@@ -25,12 +25,12 @@ func (repository *Repository) GetAll() ([]route.Route, error) {
 	}
 	domainRoutes := make([]route.Route, 0)
 	for _, daoRoute := range daoRoutes {
-		domainRoutes = append(domainRoutes, repository.mapper.ToDomain(daoRoute))
+		domainRoutes = append(domainRoutes, *repository.mapper.ToDomain(daoRoute))
 	}
-	return domainRoutes, nil
+	return &domainRoutes, nil
 }
 
-func (repository *Repository) GetAllEnabled() ([]route.Route, error) {
+func (repository *Repository) GetAllEnabled() (*[]route.Route, error) {
 
 	var daoRoutes []dao.Route
 	result := repository.postgresql.DB.Where(&dao.Route{Enable: true}).Find(&daoRoutes)
@@ -39,7 +39,7 @@ func (repository *Repository) GetAllEnabled() ([]route.Route, error) {
 	}
 	domainRoutes := make([]route.Route, 0)
 	for _, daoRoute := range daoRoutes {
-		domainRoutes = append(domainRoutes, repository.mapper.ToDomain(daoRoute))
+		domainRoutes = append(domainRoutes, *repository.mapper.ToDomain(daoRoute))
 	}
-	return domainRoutes, nil
+	return &domainRoutes, nil
 }
