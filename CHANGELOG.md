@@ -4,7 +4,11 @@ API Gateway
 ## [Unreleased]
 - gRCP Calls
 
-## [1.1.0] - 28/07/2022
+## [1.1.1] - 20/09/2022
+### Fixed
+- Clean code
+
+## [1.1.0] - 19/09/2022
 ### Added
 - HTTP Router to any
 

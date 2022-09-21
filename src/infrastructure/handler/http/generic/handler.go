@@ -11,7 +11,6 @@ import (
 
 func Handler(ctx *gin.Context, route *domainRoute.Route) {
 	path := ctx.Param("proxyPath")
-	//method := ctx.Request.Method
 	ctx.Header("Access-Control-Allow-Origin", "*")
 	fmt.Println(path)
 	fmt.Println(route.UrlTarget() + path)
@@ -21,24 +20,6 @@ func Handler(ctx *gin.Context, route *domainRoute.Route) {
 		log.Print("Error al invocar al servicio ", route.UrlTarget()+path, err)
 		ctx.AbortWithStatus(http.StatusBadGateway)
 	}
-
-	/*
-		if isPathMatch(path, "/api/gateway/v1/conf") {
-			if method == "GET" {
-				validRoute = true
-				routeRepository := route.Init(config)
-				useCaseGetRoute := get.NewUseCaseGetRoute(&routeRepository)
-				var err error
-				*routes, err = useCaseGetRoute.Execute()
-				if err != nil {
-					log.Fatalln("Failed to load routes", err)
-				}
-				log.Print("Routes:")
-				for _, routeItem := range *routes {
-					log.Print("--->> Path:", routeItem.RelativePath(), " -> To:", routeItem.UrlTarget(), " Type:", routeItem.TypeTarget())
-				}
-			}
-		}*/
 }
 
 func RegisterHttpRoutes(r *gin.Engine, routes *[]domainRoute.Route) {
