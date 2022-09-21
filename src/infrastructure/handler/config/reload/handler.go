@@ -1,4 +1,4 @@
-package update
+package reload
 
 import (
 	"github.com/gin-gonic/gin"
