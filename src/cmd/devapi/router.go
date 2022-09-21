@@ -3,8 +3,8 @@ package devapi
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/config/reload"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/http/generic"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/reload"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 )
 

@@ -12,7 +12,7 @@ type Config struct {
 }
 
 func LoadConfig() (c Config, err error) {
-	viper.AddConfigPath("./src/cmd/devapi/config/envs")
+	viper.AddConfigPath("./src/cmd/devapi/route/envs")
 
 	scope := os.Getenv("SCOPE")
 	log.Print("OS scope configuration:", scope)

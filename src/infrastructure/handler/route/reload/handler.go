@@ -5,13 +5,13 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
 	domainRoute "github.com/lumialvarez/go-api-gateway/src/internal/route"
-	"github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/get"
+	"github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getEnabled"
 	"log"
 )
 
 func Handler(r *gin.Engine, routes *[]domainRoute.Route, config config.Config) {
 	routeRepository := route.Init(config)
-	useCaseGetRoute := get.NewUseCaseGetRoute(&routeRepository)
+	useCaseGetRoute := getEnabled.NewUseCaseGetEnabledRoute(&routeRepository)
 	var err error
 	err = useCaseGetRoute.Update(routes)
 	if err != nil {
