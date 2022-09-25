@@ -11,6 +11,8 @@ pipeline {
 		DATASOURCE_PASSWORD = credentials("DATASOURCE_PASSWORD")
 
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-lmalvarez')
+
+		APP_VERSION = '0.0.0'
 	}
 	stages {
 		stage('Get Version') {
@@ -53,9 +55,7 @@ pipeline {
 
                 sh '''docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
-                sh '''docker build . -t go-api-gateway '''
-
-                sh '''docker tag go-api-gateway lmalvarez/go-api-gateway:${APP_VERSION} '''
+                sh '''docker build . -t lmalvarez/go-api-gateway:${APP_VERSION} '''
 
                 sh '''docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
             }
