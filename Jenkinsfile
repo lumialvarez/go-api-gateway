@@ -50,7 +50,7 @@ pipeline {
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
-                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
+                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
 
                 sh '''sudo docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
