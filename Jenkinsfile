@@ -50,18 +50,18 @@ pipeline {
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
-                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
+                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
 
-                sh '''sudo docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
+                sh '''docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
-                sh '''sudo docker build . -t lmalvarez/go-api-gateway:${APP_VERSION} '''
+                sh '''docker build . -t lmalvarez/go-api-gateway:${APP_VERSION} '''
 
-                sh '''sudo docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
+                sh '''docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
             }
         }
 		stage('Deploy') {
 			steps {
-				sh '''sudo docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION} '''
+				sh '''docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION} '''
 			}
 		}
 	}
