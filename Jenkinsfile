@@ -42,9 +42,6 @@ pipeline {
                     ).trim()
                 }
 
-                sh 'whoami'
-
-
                 sh 'java ReplaceSecrets.java DATASOURCE_URL_CLEARED $DATASOURCE_URL_CLEARED'
                 sh 'java ReplaceSecrets.java DATASOURCE_USERNAME $DATASOURCE_USERNAME'
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
@@ -52,11 +49,13 @@ pipeline {
 
                 sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
 
+                sh '''docker rm -f go-api-gateway &>/dev/null && echo \'Removed old container\' '''
+
                 sh '''docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
-                sh '''docker build . -t go-api-gateway:${APP_VERSION} '''
+                sh '''docker build . -t go-api-gateway '''
 
-                sh '''docker tag go-api-gateway:${APP_VERSION} lmalvarez/jenkins:${APP_VERSION} '''
+                sh '''docker tag go-api-gateway:${APP_VERSION} lmalvarez/go-api-gateway:${APP_VERSION} '''
 
                 sh '''docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
             }
