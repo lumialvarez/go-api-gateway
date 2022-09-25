@@ -4,6 +4,10 @@ API Gateway
 ## [Unreleased]
 - gRCP Calls
 
+## [1.1.2] - 25/09/2022
+### Fixed
+- Refactor Jenkinsfile
+
 ## [1.1.1] - 20/09/2022
 ### Fixed
 - Clean code
