@@ -34,12 +34,6 @@ pipeline {
 		}
 		stage('Build') {
             steps {
-                script {
-                    REMOTE_HOME = sh (
-                        script: '''ssh ${SSH_MAIN_SERVER} 'pwd' ''',
-                        returnStdout: true
-                    ).trim()
-                }
                 //script_internal_ip.sh -> ip route | awk '/docker0 /{print $9}'
                 script {
                     INTERNAL_IP = sh (
@@ -47,6 +41,8 @@ pipeline {
                         returnStdout: true
                     ).trim()
                 }
+
+                sh 'whoami'
 
 
                 sh 'java ReplaceSecrets.java DATASOURCE_URL_CLEARED $DATASOURCE_URL_CLEARED'
