@@ -54,23 +54,18 @@ pipeline {
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
-                sh '''echo $DOCKER_PASSWORD | ssh ${SSH_MAIN_SERVER} 'sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin' '''
+                sh '''echo $DOCKER_PASSWORD | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
 
-                sh '''ssh ${SSH_MAIN_SERVER} 'sudo rm -rf ${REMOTE_HOME}/tmp_jenkins/${JOB_NAME}' '''
-                sh '''ssh ${SSH_MAIN_SERVER} 'sudo mkdir -p -m 777 ${REMOTE_HOME}/tmp_jenkins/${JOB_NAME}' '''
+                sh '''sudo docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
-                sh '''scp -r ${WORKSPACE}/* ${SSH_MAIN_SERVER}:${REMOTE_HOME}/tmp_jenkins/${JOB_NAME} '''
+                sh '''sudo docker build . -t lmalvarez/go-api-gateway:${APP_VERSION} '''
 
-                sh '''ssh ${SSH_MAIN_SERVER} 'sudo docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\'' '''
-
-                sh '''ssh ${SSH_MAIN_SERVER} 'cd ${REMOTE_HOME}/tmp_jenkins/${JOB_NAME} ; sudo docker build . -t lmalvarez/go-api-gateway:${APP_VERSION}' '''
-
-                sh '''ssh sudo docker push lmalvarez/go-api-gateway:${APP_VERSION}' '''
+                sh '''sudo docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
             }
         }
 		stage('Deploy') {
 			steps {
-				sh '''ssh ${SSH_MAIN_SERVER} 'sudo docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION}' '''
+				sh '''sudo docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION} '''
 			}
 		}
 	}
