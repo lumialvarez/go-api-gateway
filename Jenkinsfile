@@ -42,11 +42,7 @@ pipeline {
 
                 sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
 
-                sh "docker rm -f tmp-go-api-gateway &>/dev/null && echo \'Removed old temporal container\' "
-
                 sh "docker build . -t tmp-go-api-gateway"
-
-                sh "docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' "
 
                 sh "docker tag tmp-go-api-gateway lmalvarez/go-api-gateway:${APP_VERSION}"
             }
@@ -60,6 +56,8 @@ pipeline {
                         returnStdout: true
                     ).trim()
                 }
+
+                sh "docker rm -f go-api-gateway &>/dev/null && echo \'Removed old container\' "
 
 				sh "docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION}"
 			}
