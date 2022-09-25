@@ -40,13 +40,15 @@ pipeline {
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
-                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
+
+                sh "docker rm -f tmp-go-api-gateway &>/dev/null && echo \'Removed old temporal container\' "
+
+                sh "docker build . -t tmp-go-api-gateway"
 
                 sh "docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' "
 
-                sh "docker build . -t lmalvarez/go-api-gateway:${APP_VERSION}"
-
-                sh "docker push lmalvarez/go-api-gateway:${APP_VERSION}"
+                sh "docker tag tmp-go-api-gateway lmalvarez/go-api-gateway:${APP_VERSION}"
             }
         }
 		stage('Deploy') {
@@ -62,5 +64,10 @@ pipeline {
 				sh "docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION}"
 			}
 		}
+		stage('Push') {
+            steps {
+                sh "docker push lmalvarez/go-api-gateway:${APP_VERSION}"
+            }
+        }
 	}
 }
