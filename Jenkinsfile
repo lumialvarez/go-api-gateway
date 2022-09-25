@@ -40,11 +40,7 @@ pipeline {
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
-                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
-
-                sh "docker build . -t tmp-go-api-gateway"
-
-                sh "docker tag tmp-go-api-gateway lmalvarez/go-api-gateway:${APP_VERSION}"
+                sh "docker build . -t lmalvarez/go-api-gateway:${APP_VERSION}"
             }
         }
 		stage('Deploy') {
@@ -64,6 +60,8 @@ pipeline {
 		}
 		stage('Push') {
             steps {
+                sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
+
                 sh "docker push lmalvarez/go-api-gateway:${APP_VERSION}"
             }
         }
