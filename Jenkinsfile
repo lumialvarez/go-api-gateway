@@ -55,7 +55,7 @@ pipeline {
 
                 sh '''docker build . -t go-api-gateway '''
 
-                sh '''docker tag go-api-gateway:${APP_VERSION} lmalvarez/go-api-gateway:${APP_VERSION} '''
+                sh '''docker tag go-api-gateway lmalvarez/go-api-gateway:${APP_VERSION} '''
 
                 sh '''docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
             }
