@@ -54,7 +54,9 @@ pipeline {
 
                 sh '''docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
-                sh '''docker build . -t lmalvarez/go-api-gateway:${APP_VERSION} '''
+                sh '''docker build . -t go-api-gateway:${APP_VERSION} '''
+
+                sh '''docker tag go-api-gateway:${APP_VERSION} lmalvarez/jenkins:${APP_VERSION} '''
 
                 sh '''docker push lmalvarez/go-api-gateway:${APP_VERSION} '''
             }
