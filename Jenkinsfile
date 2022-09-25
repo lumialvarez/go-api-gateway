@@ -1,3 +1,4 @@
+def APP_VERSION
 pipeline {
 	agent any
 	tools {
@@ -11,8 +12,6 @@ pipeline {
 		DATASOURCE_PASSWORD = credentials("DATASOURCE_PASSWORD")
 
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub-lmalvarez')
-
-		APP_VERSION = '0.0.0'
 	}
 	stages {
 		stage('Get Version') {
@@ -36,22 +35,12 @@ pipeline {
 		}
 		stage('Build') {
             steps {
-                //script_internal_ip.sh -> ip route | awk '/docker0 /{print $9}'
-                script {
-                    INTERNAL_IP = sh (
-                        script: '''ssh ${SSH_MAIN_SERVER} 'sudo bash script_internal_ip.sh' ''',
-                        returnStdout: true
-                    ).trim()
-                }
-
                 sh 'java ReplaceSecrets.java DATASOURCE_URL_CLEARED $DATASOURCE_URL_CLEARED'
                 sh 'java ReplaceSecrets.java DATASOURCE_USERNAME $DATASOURCE_USERNAME'
                 sh 'java ReplaceSecrets.java DATASOURCE_PASSWORD $DATASOURCE_PASSWORD'
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
                 sh '''echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '''
-
-                sh '''docker rm -f go-api-gateway &>/dev/null && echo \'Removed old container\' '''
 
                 sh '''docker rm -f lmalvarez/go-api-gateway:${APP_VERSION} &>/dev/null && echo \'Removed old container\' '''
 
@@ -62,6 +51,14 @@ pipeline {
         }
 		stage('Deploy') {
 			steps {
+			    //script_internal_ip.sh -> ip route | awk '/docker0 /{print $9}'
+                script {
+                    INTERNAL_IP = sh (
+                        script: '''ssh ${SSH_MAIN_SERVER} 'sudo bash script_internal_ip.sh' ''',
+                        returnStdout: true
+                    ).trim()
+                }
+
 				sh '''docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION} '''
 			}
 		}
