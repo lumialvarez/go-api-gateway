@@ -55,6 +55,8 @@ pipeline {
 
                 sh "docker rm -f go-api-gateway &>/dev/null && echo \'Removed old container\' "
 
+                sh "sleep 5s"
+
 				sh "docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION}"
 			}
 		}
