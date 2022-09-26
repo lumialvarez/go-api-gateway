@@ -3,7 +3,7 @@ FROM golang:alpine
 
 # Install git.
 # Git is required for fetching the dependencies.
-RUN apk update && apk add --no-cache git && apk add --no-cach bash && apk add build-base
+RUN apk reload && apk add --no-cache git && apk add --no-cach bash && apk add build-base
 
 RUN export GIN_MODE=release
 RUN export SCOPE=prod
@@ -16,7 +16,7 @@ WORKDIR /app
 COPY . .
 
 # Download all the dependencies
-RUN go get -d -v ./...
+RUN go getEnabled -d -v ./...
 
 # Install the package
 RUN go install -v ./...

@@ -4,6 +4,10 @@ API Gateway
 ## [Unreleased]
 - gRCP Calls
 
+## [1.2.0] - --/09/2022
+### Added
+- Routes administration
+
 ## [1.1.2] - 25/09/2022
 ### Fixed
 - Refactor Jenkinsfile
