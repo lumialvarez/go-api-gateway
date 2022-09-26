@@ -1,20 +1,32 @@
-package reload
+package handlerRouteReload
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
 	domainRoute "github.com/lumialvarez/go-api-gateway/src/internal/route"
-	"github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getEnabled"
-	"log"
+	"net/http"
 )
 
-func Handler(r *gin.Engine, routes *[]domainRoute.Route, config config.Config) {
-	routeRepository := route.Init(config)
-	useCaseGetRoute := getEnabled.NewUseCaseGetEnabledRoute(&routeRepository)
-	var err error
-	err = useCaseGetRoute.Update(routes)
+type UseCase interface {
+	Execute(ctx gin.Context, routes *[]domainRoute.Route) ([]domainRoute.Route, error)
+}
+
+type ApiResponseProvider interface {
+	ToAPIResponse(err error, cause ...string) *apierrors.APIError
+}
+
+type Handler struct {
+	useCase             UseCase
+	apiResponseProvider ApiResponseProvider
+}
+
+func NewHandler(useCase UseCase, apiResponseProvider ApiResponseProvider) Handler {
+	return Handler{useCase: useCase, apiResponseProvider: apiResponseProvider}
+}
+
+func (h Handler) Handler(ctx *gin.Context, routes *[]domainRoute.Route) {
+	_, err := h.useCase.Execute(*ctx, routes)
 	if err != nil {
-		log.Fatalln("Failed to load routes", err)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 	}
 }

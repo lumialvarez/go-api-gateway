@@ -24,7 +24,7 @@ func Start() {
 
 	r := gin.Default()
 
-	RegisterRoutes(r, config, dynamicRoutes)
+	ConfigureRoutes(r, config, dynamicRoutes)
 
 	r.Run(config.Port)
 }
