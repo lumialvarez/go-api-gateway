@@ -5,5 +5,6 @@ type Route struct {
 	RelativePath string `gorm:"unique"`
 	UrlTarget    string
 	TypeTarget   string
+	Secure       bool
 	Enable       bool
 }

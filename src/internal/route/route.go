@@ -5,11 +5,12 @@ type Route struct {
 	relativePath string
 	urlTarget    string
 	typeTarget   string
+	secure       bool
 	enable       bool
 }
 
-func NewRoute(id int64, relativePath string, urlTarget string, typeTarget string, enable bool) *Route {
-	return &Route{id: id, relativePath: relativePath, urlTarget: urlTarget, typeTarget: typeTarget, enable: enable}
+func NewRoute(id int64, relativePath string, urlTarget string, typeTarget string, secure bool, enable bool) *Route {
+	return &Route{id: id, relativePath: relativePath, urlTarget: urlTarget, typeTarget: typeTarget, secure: secure, enable: enable}
 }
 
 func (r *Route) Id() int64 {
@@ -30,6 +31,14 @@ func (r *Route) SetUrlTarget(urlTarget string) {
 
 func (r *Route) TypeTarget() string {
 	return r.typeTarget
+}
+
+func (r *Route) Secure() bool {
+	return r.secure
+}
+
+func (r *Route) SetSecure(secure bool) {
+	r.secure = secure
 }
 
 func (r *Route) Enable() bool {

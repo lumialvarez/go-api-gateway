@@ -30,6 +30,7 @@ func (uc UseCaseGetRoute) Execute(ctx gin.Context, routes *[]route.Route) ([]rou
 			routeItem := &(*routes)[idy]
 			if tmpRouteItem.Id() == routeItem.Id() {
 				routeItem.SetUrlTarget(tmpRouteItem.UrlTarget())
+				routeItem.SetSecure(tmpRouteItem.Secure())
 				routeItem.SetEnable(tmpRouteItem.Enable())
 			}
 		}

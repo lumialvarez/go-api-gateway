@@ -5,5 +5,6 @@ type GetRouteResponse struct {
 	RelativePath string
 	UrlTarget    string
 	TypeTarget   string
+	Secure       bool
 	Enable       bool
 }

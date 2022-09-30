@@ -16,6 +16,7 @@ func (m Mapper) ToDTOs(domainRoutes []route.Route) []contract.GetRouteResponse {
 			RelativePath: domainRoute.RelativePath(),
 			UrlTarget:    domainRoute.UrlTarget(),
 			TypeTarget:   domainRoute.TypeTarget(),
+			Secure:       domainRoute.Secure(),
 			Enable:       domainRoute.Enable(),
 		}
 		dtoRoutes = append(dtoRoutes, tmpDTO)
