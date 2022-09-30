@@ -9,7 +9,7 @@ import (
 	handlerRouteReload "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/reload"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
 	useCaseGetRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/get"
-	updateRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/update"
+	updateRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/reload"
 )
 
 type DependenciesContainer struct {

@@ -14,7 +14,7 @@ type Mapper interface {
 }
 
 type UseCase interface {
-	Execute(ctx gin.Context) ([]route.Route, error)
+	Execute() (*[]route.Route, error)
 }
 
 type ApiResponseProvider interface {
@@ -37,12 +37,12 @@ func (h Handler) Handler(ginCtx *gin.Context) {
 
 func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
 
-	domainRoutes, err := h.useCase.Execute(*ctx)
+	domainRoutes, err := h.useCase.Execute()
 	if err != nil {
 		return h.apiResponseProvider.ToAPIResponse(err)
 
 	}
-	dtoRoutes := h.mapper.ToDTOs(domainRoutes)
+	dtoRoutes := h.mapper.ToDTOs(*domainRoutes)
 	ctx.JSON(http.StatusOK, dtoRoutes)
 	return nil
 }

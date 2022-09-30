@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
 	domainRoute "github.com/lumialvarez/go-api-gateway/src/internal/route"
+	"log"
 	"net/http"
 )
 
@@ -26,6 +27,12 @@ func NewHandler(useCase UseCase, apiResponseProvider ApiResponseProvider) Handle
 
 func (h Handler) Handler(ctx *gin.Context, routes *[]domainRoute.Route) {
 	_, err := h.useCase.Execute(*ctx, routes)
+
+	for _, routeItem := range *routes {
+		log.Print("Reload target url in routes HTTP:")
+		log.Print("--->> Path:", routeItem.RelativePath(), " -> To:", routeItem.UrlTarget(), " Type:", routeItem.TypeTarget())
+	}
+
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 	}

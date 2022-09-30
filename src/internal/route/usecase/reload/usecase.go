@@ -1,4 +1,4 @@
-package updateRoute
+package reloadRoute
 
 import (
 	"github.com/gin-gonic/gin"
