@@ -1,10 +1,10 @@
-package update
+package updateRoute
 
 import "github.com/lumialvarez/go-api-gateway/src/internal/route"
 
 type Repository interface {
 	Update(route route.Route) error
-	GetById(id int64) (route.Route, error)
+	GetById(id int64) (*route.Route, error)
 }
 
 type UseCaseUpdateRoute struct {
@@ -23,7 +23,7 @@ func (uc UseCaseUpdateRoute) Execute(route route.Route) error {
 
 	bdRoute.UpdateRoute(route)
 
-	err = uc.repository.Update(bdRoute)
+	err = uc.repository.Update(*bdRoute)
 	if err != nil {
 		return err
 	}

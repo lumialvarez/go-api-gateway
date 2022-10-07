@@ -1,7 +1,7 @@
-package mapper
+package mapperGetAllRoutes
 
 import (
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/get/contract"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall/contract"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 )
 

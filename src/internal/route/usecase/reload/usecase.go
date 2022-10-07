@@ -14,7 +14,7 @@ type UseCaseGetRoute struct {
 	repository Repository
 }
 
-func NewUseCaseGetRoute(repository Repository) *UseCaseGetRoute {
+func NewUseCaseReloadRoute(repository Repository) *UseCaseGetRoute {
 	return &UseCaseGetRoute{repository: repository}
 }
 

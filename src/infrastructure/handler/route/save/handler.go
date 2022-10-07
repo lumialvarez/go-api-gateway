@@ -1,20 +1,23 @@
-package get
+package handlerSaveRoute
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/get/contract"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/save/contract"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/handlers"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
-	"net/http"
+)
+
+const (
+	invalidFormat string = "invalid_message_format"
 )
 
 type Mapper interface {
-	ToDTOs(domainRoutes []route.Route) []contract.GetRouteResponse
+	ToDomain(dtoRoute contract.SaveRouteRequest) route.Route
 }
 
 type UseCase interface {
-	Execute() (*[]route.Route, error)
+	Execute(route route.Route) error
 }
 
 type ApiResponseProvider interface {
@@ -36,13 +39,15 @@ func (h Handler) Handler(ginCtx *gin.Context) {
 }
 
 func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
+	var request contract.SaveRouteRequest
+	if err := ctx.BindJSON(&request); err != nil {
+		return apierrors.NewBadRequestError(invalidFormat, err.Error())
+	}
+	domainRoute := h.mapper.ToDomain(request)
 
-	domainRoutes, err := h.useCase.Execute()
+	err := h.useCase.Execute(domainRoute)
 	if err != nil {
 		return h.apiResponseProvider.ToAPIResponse(err)
-
 	}
-	dtoRoutes := h.mapper.ToDTOs(*domainRoutes)
-	ctx.JSON(http.StatusOK, dtoRoutes)
 	return nil
 }
