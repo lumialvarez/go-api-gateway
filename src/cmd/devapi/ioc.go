@@ -8,7 +8,7 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/get/mapper"
 	handlerRouteReload "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/reload"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
-	useCaseGetRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/get"
+	useCaseGetRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getall"
 	updateRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/reload"
 )
 

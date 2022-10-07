@@ -26,12 +26,9 @@ func (uc UseCaseGetRoute) Execute(ctx gin.Context, routes *[]route.Route) ([]rou
 
 	for idx := range *tmpRoutes {
 		tmpRouteItem := &(*tmpRoutes)[idx]
-		for idy := range *routes {
-			routeItem := &(*routes)[idy]
+		for _, routeItem := range *routes {
 			if tmpRouteItem.Id() == routeItem.Id() {
-				routeItem.SetUrlTarget(tmpRouteItem.UrlTarget())
-				routeItem.SetSecure(tmpRouteItem.Secure())
-				routeItem.SetEnable(tmpRouteItem.Enable())
+				routeItem.UpdateRoute(*tmpRouteItem)
 			}
 		}
 	}

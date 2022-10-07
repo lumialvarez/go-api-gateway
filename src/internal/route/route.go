@@ -25,10 +25,6 @@ func (r *Route) UrlTarget() string {
 	return r.urlTarget
 }
 
-func (r *Route) SetUrlTarget(urlTarget string) {
-	r.urlTarget = urlTarget
-}
-
 func (r *Route) TypeTarget() string {
 	return r.typeTarget
 }
@@ -37,14 +33,12 @@ func (r *Route) Secure() bool {
 	return r.secure
 }
 
-func (r *Route) SetSecure(secure bool) {
-	r.secure = secure
-}
-
 func (r *Route) Enable() bool {
 	return r.enable
 }
 
-func (r *Route) SetEnable(enable bool) {
-	r.enable = enable
+func (r *Route) UpdateRoute(route Route) {
+	r.urlTarget = route.urlTarget
+	r.secure = route.secure
+	r.enable = route.enable
 }

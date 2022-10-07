@@ -1,4 +1,4 @@
-package get
+package getall
 
 import (
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
@@ -6,7 +6,6 @@ import (
 
 type Repository interface {
 	GetAll() (*[]route.Route, error)
-	GetAllEnabled() (*[]route.Route, error)
 }
 
 type UseCaseGetRoute struct {
