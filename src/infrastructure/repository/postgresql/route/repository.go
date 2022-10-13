@@ -65,7 +65,13 @@ func (repository *Repository) Save(route route.Route) error {
 
 func (repository *Repository) Update(route route.Route) error {
 	daoRoute := repository.mapper.ToDao(route)
-	result := repository.postgresql.DB.Where(&dao.Route{Id: daoRoute.Id}).Updates(&daoRoute)
+
+	result := repository.postgresql.DB.Model(&daoRoute).Where(&dao.Route{Id: daoRoute.Id}).Updates(
+		map[string]interface{}{
+			"UrlTarget": daoRoute.UrlTarget,
+			"Secure":    daoRoute.Secure,
+			"Enable":    daoRoute.Enable,
+		})
 	if result.Error != nil {
 		return result.Error
 	}
