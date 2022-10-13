@@ -3,10 +3,11 @@ API Gateway
 
 ## [Unreleased]
 - gRCP Calls
+- Enable auth service integration
 
-## [1.2.0] - --/09/2022
+## [1.2.0] - 12/10/2022
 ### Added
-- Routes administration
+- Routes administration (disabled without auth service integration)
 
 ## [1.1.2] - 25/09/2022
 ### Fixed

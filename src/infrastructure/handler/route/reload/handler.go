@@ -16,16 +16,24 @@ type ApiResponseProvider interface {
 	ToAPIResponse(err error, cause ...string) *apierrors.APIError
 }
 
-type Handler struct {
-	useCase             UseCase
-	apiResponseProvider ApiResponseProvider
+type AuthenticationService interface {
+	IsAuthorized(ctx *gin.Context) (bool, error)
 }
 
-func NewHandler(useCase UseCase, apiResponseProvider ApiResponseProvider) Handler {
-	return Handler{useCase: useCase, apiResponseProvider: apiResponseProvider}
+type Handler struct {
+	useCase               UseCase
+	apiResponseProvider   ApiResponseProvider
+	authenticationService AuthenticationService
+}
+
+func NewHandler(useCase UseCase, apiResponseProvider ApiResponseProvider, authenticationService AuthenticationService) Handler {
+	return Handler{useCase: useCase, apiResponseProvider: apiResponseProvider, authenticationService: authenticationService}
 }
 
 func (h Handler) Handler(ctx *gin.Context, routes *[]domainRoute.Route) {
+	if authorized, err := h.authenticationService.IsAuthorized(ctx); !authorized || err != nil {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+	}
 	_, err := h.useCase.Execute(*ctx, routes)
 
 	for _, routeItem := range *routes {

@@ -21,14 +21,19 @@ type ApiResponseProvider interface {
 	ToAPIResponse(err error, cause ...string) *apierrors.APIError
 }
 
-type Handler struct {
-	mapper              Mapper
-	useCase             UseCase
-	apiResponseProvider ApiResponseProvider
+type AuthenticationService interface {
+	IsAuthorized(ctx *gin.Context) (bool, error)
 }
 
-func NewHandler(mapper Mapper, useCase UseCase, apiResponseProvider ApiResponseProvider) Handler {
-	return Handler{mapper: mapper, useCase: useCase, apiResponseProvider: apiResponseProvider}
+type Handler struct {
+	mapper                Mapper
+	useCase               UseCase
+	apiResponseProvider   ApiResponseProvider
+	authenticationService AuthenticationService
+}
+
+func NewHandler(mapper Mapper, useCase UseCase, apiResponseProvider ApiResponseProvider, authenticationService AuthenticationService) Handler {
+	return Handler{mapper: mapper, useCase: useCase, apiResponseProvider: apiResponseProvider, authenticationService: authenticationService}
 }
 
 func (h Handler) Handler(ginCtx *gin.Context) {
@@ -36,6 +41,9 @@ func (h Handler) Handler(ginCtx *gin.Context) {
 }
 
 func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
+	if authorized, err := h.authenticationService.IsAuthorized(ctx); !authorized || err != nil {
+		return apierrors.NewUnauthorizedError("Not Authorized")
+	}
 	domainRoutes, err := h.useCase.Execute()
 	if err != nil {
 		return h.apiResponseProvider.ToAPIResponse(err)
