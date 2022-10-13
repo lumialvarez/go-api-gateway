@@ -5,7 +5,7 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
 	domainRoute "github.com/lumialvarez/go-api-gateway/src/internal/route"
-	"github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getEnabled"
+	"github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getall"
 	"log"
 )
 
@@ -31,7 +31,7 @@ func Start() {
 
 func loadRoutes(config config.Config) (*[]domainRoute.Route, error) {
 	routeRepository := route.Init(config)
-	useCaseGetRoute := getEnabled.NewUseCaseGetEnabledRoute(&routeRepository)
+	useCaseGetRoute := getall.NewUseCaseGetRoute(&routeRepository)
 	routes, err := useCaseGetRoute.Execute()
 	return routes, err
 }

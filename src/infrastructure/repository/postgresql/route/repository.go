@@ -31,7 +31,6 @@ func (repository *Repository) GetAll() (*[]route.Route, error) {
 }
 
 func (repository *Repository) GetAllEnabled() (*[]route.Route, error) {
-
 	var daoRoutes []dao.Route
 	result := repository.postgresql.DB.Where(&dao.Route{Enable: true}).Find(&daoRoutes)
 	if result.Error != nil {
@@ -42,4 +41,39 @@ func (repository *Repository) GetAllEnabled() (*[]route.Route, error) {
 		domainRoutes = append(domainRoutes, *repository.mapper.ToDomain(daoRoute))
 	}
 	return &domainRoutes, nil
+}
+
+func (repository *Repository) GetById(id int64) (*route.Route, error) {
+	var daoRoute dao.Route
+	result := repository.postgresql.DB.Where(&dao.Route{Id: id}).First(&daoRoute)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	domainRoute := repository.mapper.ToDomain(daoRoute)
+	return domainRoute, nil
+}
+
+func (repository *Repository) Save(route route.Route) error {
+	daoRoute := repository.mapper.ToDao(route)
+	daoRoute.Id = 0
+	result := repository.postgresql.DB.Create(&daoRoute)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func (repository *Repository) Update(route route.Route) error {
+	daoRoute := repository.mapper.ToDao(route)
+
+	result := repository.postgresql.DB.Model(&daoRoute).Where(&dao.Route{Id: daoRoute.Id}).Updates(
+		map[string]interface{}{
+			"UrlTarget": daoRoute.UrlTarget,
+			"Secure":    daoRoute.Secure,
+			"Enable":    daoRoute.Enable,
+		})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

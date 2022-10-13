@@ -1,7 +1,7 @@
-package mapper
+package mapperGetAllRoutes
 
 import (
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/get/contract"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall/contract"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 )
 
@@ -16,6 +16,7 @@ func (m Mapper) ToDTOs(domainRoutes []route.Route) []contract.GetRouteResponse {
 			RelativePath: domainRoute.RelativePath(),
 			UrlTarget:    domainRoute.UrlTarget(),
 			TypeTarget:   domainRoute.TypeTarget(),
+			Secure:       domainRoute.Secure(),
 			Enable:       domainRoute.Enable(),
 		}
 		dtoRoutes = append(dtoRoutes, tmpDTO)

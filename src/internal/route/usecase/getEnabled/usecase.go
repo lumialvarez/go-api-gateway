@@ -24,22 +24,3 @@ func (uc UseCaseGetEnabledRoute) Execute() (*[]route.Route, error) {
 	}
 	return domainRoute, nil
 }
-
-func (uc UseCaseGetEnabledRoute) Update(routes *[]route.Route) error {
-	tmpRoutes, err := uc.repository.GetAll()
-	if err != nil {
-		return err
-	}
-
-	for idx := range *tmpRoutes {
-		tmpRouteItem := &(*tmpRoutes)[idx]
-		for idy := range *routes {
-			routeItem := &(*routes)[idy]
-			if tmpRouteItem.Id() == routeItem.Id() {
-				routeItem.SetUrlTarget(tmpRouteItem.UrlTarget())
-				routeItem.SetEnable(tmpRouteItem.Enable())
-			}
-		}
-	}
-	return nil
-}

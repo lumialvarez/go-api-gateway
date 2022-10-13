@@ -15,6 +15,11 @@ func Handler(ctx *gin.Context, route *domainRoute.Route) {
 	fmt.Println(path)
 	fmt.Println(route.UrlTarget() + path)
 
+	if !route.Enable() {
+		log.Print("Endpoint inhabilitado ", route.UrlTarget()+path)
+		ctx.AbortWithStatus(http.StatusNotFound)
+	}
+
 	err := httpclient.HttpPassThrough(route.UrlTarget(), ctx)
 	if err != nil {
 		log.Print("Error al invocar al servicio ", route.UrlTarget()+path, err)
@@ -25,7 +30,7 @@ func Handler(ctx *gin.Context, route *domainRoute.Route) {
 func RegisterHttpRoutes(r *gin.Engine, routes *[]domainRoute.Route) {
 	for idx, _ := range *routes {
 		routeItem := &(*routes)[idx]
-		if routeItem.TypeTarget() == "http" {
+		if routeItem.TypeTarget() == "http" && routeItem.Enable() {
 			log.Print("Routes HTTP:")
 			log.Print("--->> Path:", routeItem.RelativePath(), " -> To:", routeItem.UrlTarget(), " Type:", routeItem.TypeTarget())
 

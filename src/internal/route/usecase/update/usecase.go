@@ -1,38 +1,32 @@
 package updateRoute
 
-import (
-	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/internal/route"
-)
+import "github.com/lumialvarez/go-api-gateway/src/internal/route"
 
 type Repository interface {
-	GetAll() (*[]route.Route, error)
-	GetAllEnabled() (*[]route.Route, error)
+	Update(route route.Route) error
+	GetById(id int64) (*route.Route, error)
 }
 
-type UseCaseGetRoute struct {
+type UseCaseUpdateRoute struct {
 	repository Repository
 }
 
-func NewUseCaseGetRoute(repository Repository) *UseCaseGetRoute {
-	return &UseCaseGetRoute{repository: repository}
+func NewUseCaseUpdateRoute(repository Repository) *UseCaseUpdateRoute {
+	return &UseCaseUpdateRoute{repository: repository}
 }
 
-func (uc UseCaseGetRoute) Execute(ctx gin.Context, routes *[]route.Route) ([]route.Route, error) {
-	tmpRoutes, err := uc.repository.GetAll()
+func (uc UseCaseUpdateRoute) Execute(route route.Route) error {
+	bdRoute, err := uc.repository.GetById(route.Id())
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	for idx := range *tmpRoutes {
-		tmpRouteItem := &(*tmpRoutes)[idx]
-		for idy := range *routes {
-			routeItem := &(*routes)[idy]
-			if tmpRouteItem.Id() == routeItem.Id() {
-				routeItem.SetUrlTarget(tmpRouteItem.UrlTarget())
-				routeItem.SetEnable(tmpRouteItem.Enable())
-			}
-		}
+	bdRoute.UpdateRoute(route)
+
+	err = uc.repository.Update(*bdRoute)
+	if err != nil {
+		return err
 	}
-	return *routes, nil
+
+	return nil
 }
