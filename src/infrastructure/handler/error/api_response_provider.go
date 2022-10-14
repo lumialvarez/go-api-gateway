@@ -1,7 +1,7 @@
 package handlerErrors
 
 import (
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
+	"github.com/lumialvarez/go-common-tools/web/apierrors"
 )
 
 const (

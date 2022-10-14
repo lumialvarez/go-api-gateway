@@ -2,8 +2,8 @@ package handlerRouteReload
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
 	domainRoute "github.com/lumialvarez/go-api-gateway/src/internal/route"
+	"github.com/lumialvarez/go-common-tools/web/apierrors"
 	"log"
 	"net/http"
 )

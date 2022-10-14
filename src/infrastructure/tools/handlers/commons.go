@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
+	"github.com/lumialvarez/go-common-tools/web/apierrors"
 )
 
 // HandlerFunc is the func type for the custom handlers.

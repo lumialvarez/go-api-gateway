@@ -3,9 +3,9 @@ package handlerSaveRoute
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/save/contract"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/apierrors"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/handlers"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
+	"github.com/lumialvarez/go-common-tools/web/apierrors"
 )
 
 const (
