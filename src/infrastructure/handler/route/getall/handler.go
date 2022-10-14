@@ -5,7 +5,7 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall/contract"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/handlers"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
-	"github.com/lumialvarez/go-common-tools/web/apierrors"
+	"github.com/lumialvarez/go-common-tools/http/apierrors"
 	"net/http"
 )
 
