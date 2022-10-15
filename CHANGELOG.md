@@ -5,6 +5,10 @@ API Gateway
 - gRCP Calls
 - Enable auth service integration
 
+## [1.2.1] - 14/10/2022
+### Fixed
+- Block same version deploy in jenkins
+
 ## [1.2.0] - 12/10/2022
 ### Added
 - Routes administration (disabled without auth service integration)
