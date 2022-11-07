@@ -20,47 +20,50 @@ import (
 )
 
 type DependenciesContainer struct {
-	GetAllRoutes handler.Handler
-	ReloadRoutes handler.Routes
-	SaveRoute    handler.Handler
-	UpdateRoute  handler.Handler
+	AuthorizationMiddleware authentication.Authentication
+	GetAllRoutes            handler.Handler
+	ReloadRoutes            handler.Routes
+	SaveRoute               handler.Handler
+	UpdateRoute             handler.Handler
 }
 
 func LoadDependencies(config config.Config) DependenciesContainer {
 	repositoryRoutes := route.Init(config)
 	apiProvider := handlerErrors.NewAPIResponseProvider()
-	authenticationServiceAdmin := authentication.NewAuthenticationService(authentication.Admin)
+	authServiceClient := authentication.InitServiceClient(&config)
+	authenticationService := authentication.NewAuthenticationService(authServiceClient)
 	return DependenciesContainer{
-		GetAllRoutes: newGetAllRoutesHandler(apiProvider, repositoryRoutes, authenticationServiceAdmin),
-		ReloadRoutes: newReloadRoutesHandler(apiProvider, repositoryRoutes, authenticationServiceAdmin),
-		SaveRoute:    newSaveRouteHandler(apiProvider, repositoryRoutes, authenticationServiceAdmin),
-		UpdateRoute:  newUpdateRouteHandler(apiProvider, repositoryRoutes, authenticationServiceAdmin),
+		AuthorizationMiddleware: authenticationService,
+		GetAllRoutes:            newGetAllRoutesHandler(apiProvider, repositoryRoutes),
+		ReloadRoutes:            newReloadRoutesHandler(apiProvider, repositoryRoutes),
+		SaveRoute:               newSaveRouteHandler(apiProvider, repositoryRoutes),
+		UpdateRoute:             newUpdateRouteHandler(apiProvider, repositoryRoutes),
 	}
 }
 
-func newGetAllRoutesHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository, authenticationService authentication.Authentication) handler.Handler {
+func newGetAllRoutesHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository) handler.Handler {
 	useCase := useCaseGetRoute.NewUseCaseGetRoute(&repository)
 	mapper := mapperGetAllRoutes.Mapper{}
 
-	return getallRoutes.NewHandler(mapper, useCase, apiProvider, authenticationService)
+	return getallRoutes.NewHandler(mapper, useCase, apiProvider)
 }
 
-func newReloadRoutesHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository, authenticationService authentication.Authentication) handler.Routes {
+func newReloadRoutesHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository) handler.Routes {
 	useCaseGetRoute := reloadRoute.NewUseCaseReloadRoute(&repository)
 
-	return handlerRouteReload.NewHandler(useCaseGetRoute, apiProvider, authenticationService)
+	return handlerRouteReload.NewHandler(useCaseGetRoute, apiProvider)
 }
 
-func newSaveRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository, authenticationService authentication.Authentication) handler.Handler {
+func newSaveRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository) handler.Handler {
 	useCase := saveRoute.NewUseCaseSaveRoute(&repository)
 	mapper := mapperSaveRoute.Mapper{}
 
-	return handlerSaveRoute.NewHandler(mapper, useCase, apiProvider, authenticationService)
+	return handlerSaveRoute.NewHandler(mapper, useCase, apiProvider)
 }
 
-func newUpdateRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository, authenticationService authentication.Authentication) handler.Handler {
+func newUpdateRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository) handler.Handler {
 	useCase := updateRoute.NewUseCaseUpdateRoute(&repository)
 	mapper := mapperUpdateRoute.Mapper{}
 
-	return handlerUpdateRoute.NewHandler(mapper, useCase, apiProvider, authenticationService)
+	return handlerUpdateRoute.NewHandler(mapper, useCase, apiProvider)
 }

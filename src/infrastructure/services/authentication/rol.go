@@ -3,6 +3,6 @@ package authentication
 type Rol string
 
 const (
-	User  Rol = "USER"
-	Admin     = "ADMIN"
+	User  Rol = "rol_user"
+	Admin     = "rol_admin"
 )

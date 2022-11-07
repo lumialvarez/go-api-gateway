@@ -24,6 +24,7 @@ func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRou
 
 	//API gateway methods
 	gatewayGroup := r.Group("/gateway")
+	gatewayGroup.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
 	gatewayGroup.GET("/api/v1/conf/route", handlers.GetAllRoutes.Handler)
 	gatewayGroup.POST("/api/v1/conf/route", handlers.SaveRoute.Handler)
 	gatewayGroup.PUT("/api/v1/conf/route", handlers.UpdateRoute.Handler)
