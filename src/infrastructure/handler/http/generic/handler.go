@@ -16,18 +16,18 @@ func Handler(ctx *gin.Context, route *domainRoute.Route) {
 	fmt.Println(route.UrlTarget() + path)
 
 	if !route.Enable() {
-		log.Print("Endpoint inhabilitado ", route.UrlTarget()+path)
+		log.Println("Endpoint inhabilitado ", route.UrlTarget()+path)
 		ctx.AbortWithStatus(http.StatusNotFound)
 	}
 
 	err := httpclient.HttpPassThrough(route.UrlTarget(), ctx)
 	if err != nil {
-		log.Print("Error al invocar al servicio ", route.UrlTarget()+path, err)
+		log.Println("Error al invocar al servicio ", route.UrlTarget()+path, err)
 		ctx.AbortWithStatus(http.StatusBadGateway)
 	}
 }
 
-func RegisterHttpRoutes(r *gin.Engine, routes *[]domainRoute.Route) {
+func RegisterHttpRoutes(r *gin.Engine, authorizationFunction gin.HandlerFunc, routes *[]domainRoute.Route) {
 	for idx, _ := range *routes {
 		routeItem := &(*routes)[idx]
 		if routeItem.TypeTarget() == "http" && routeItem.Enable() {
@@ -35,8 +35,11 @@ func RegisterHttpRoutes(r *gin.Engine, routes *[]domainRoute.Route) {
 			log.Print("--->> Path:", routeItem.RelativePath(), " -> To:", routeItem.UrlTarget(), " Type:", routeItem.TypeTarget())
 
 			genericHandler := func(ctx *gin.Context) { Handler(ctx, routeItem) }
-
-			r.Any(routeItem.RelativePath()+"/*proxyPath", genericHandler)
+			genericGroup := r.Group("/" + routeItem.RelativePath())
+			if routeItem.Secure() {
+				genericGroup.Use(authorizationFunction)
+			}
+			genericGroup.Any("/*proxyPath", genericHandler)
 
 		}
 	}

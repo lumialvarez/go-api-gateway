@@ -16,9 +16,10 @@ func InitServiceClient(c *config.Config) *ServiceClient {
 	cc, err := grpc.Dial(c.AuthSvcUrl, grpc.WithInsecure())
 
 	if err != nil {
-		log.Fatalln("Could not connect to Authorization Service:", err)
+		log.Print("Could not connect to Authorization Service:", err)
+	} else {
+		log.Print("Connected to Authorization Service successfully")
 	}
-	log.Print("Connected to Authorization Service successfully")
 
 	serviceClient := &ServiceClient{
 		Client: pb.NewAuthServiceClient(cc),

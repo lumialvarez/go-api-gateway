@@ -8,16 +8,12 @@ import (
 )
 
 func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route.Route) {
-
-	//Map all http dynamic Routes
-	generic.RegisterHttpRoutes(r, dynamicRoutes)
-
 	handlers := LoadDependencies(config)
 
-	registerEndpoints(r, handlers, dynamicRoutes)
+	//Map all http dynamic Routes
+	generic.RegisterHttpRoutes(r, handlers.AuthorizationMiddleware.AuthRequired, dynamicRoutes)
 
-	//authSvc := *auth.ConfigureRoutes(r, &config)
-	//product.ConfigureRoutes(r, &config, &authSvc)
+	registerEndpoints(r, handlers, dynamicRoutes)
 }
 
 func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRoutes *[]route.Route) {
