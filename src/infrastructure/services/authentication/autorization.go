@@ -7,8 +7,12 @@ import (
 	"github.com/lumialvarez/go-common-tools/http/handlers"
 	"github.com/lumialvarez/go-grpc-auth-service/src/infrastructure/handler/grpc/auth/pb"
 	"log"
-	"net/http"
 	"strings"
+)
+
+const (
+	RequiredUserRole = "requiredUserRole"
+	UserRoleAdmin    = "role_admin"
 )
 
 type Authentication struct {
@@ -27,6 +31,7 @@ func (auth *Authentication) AuthRequired(ctx *gin.Context) {
 }
 
 func (auth *Authentication) AuthRequiredAsAdmin(ctx *gin.Context) {
+	ctx.Set(RequiredUserRole, UserRoleAdmin)
 	handlers.ErrorWrapper(auth.processAuthorization, ctx)
 	if ctx.Writer.Status() != 200 && ctx.Writer.Status() != 201 {
 		ctx.Abort()
@@ -52,18 +57,17 @@ func (auth *Authentication) processAuthorization(ctx *gin.Context) *apierrors.AP
 
 	if err != nil {
 		log.Println("Error requesting to authorization service:", err)
-		return apierrors.NewBadGatewayError("Bad Gateway", "Authorization Service not responding")
+		return handlers.ToAPIError(err)
 	}
 
-	if res.Status == http.StatusUnauthorized {
-		return apierrors.NewUnauthorizedError("Unauthorized", "Authorization Service response", res.Error)
-	}
-
-	if res.Status != http.StatusOK && res.Status != http.StatusCreated {
-		return apierrors.NewBadGatewayError("Bad Gateway", "Unknown Authorization Service response")
+	requiredUserRole, _ := ctx.Get(RequiredUserRole)
+	if requiredUserRole != nil && requiredUserRole != res.Role {
+		return apierrors.NewForbiddenError("Forbidden", "The user does not have permission to access")
 	}
 
 	ctx.Set("userId", res.UserId)
+	ctx.Set("userName", res.UserName)
+	ctx.Set("userRole", res.Role)
 
 	ctx.Next()
 
