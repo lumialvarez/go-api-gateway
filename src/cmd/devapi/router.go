@@ -21,9 +21,16 @@ func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRou
 	//API gateway methods
 	gatewayGroup := r.Group("/gateway")
 	gatewayGroup.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
-	gatewayGroup.GET("/api/v1/conf/route", handlers.GetAllRoutes.Handler)
-	gatewayGroup.POST("/api/v1/conf/route", handlers.SaveRoute.Handler)
-	gatewayGroup.PUT("/api/v1/conf/route", handlers.UpdateRoute.Handler)
-	gatewayGroup.POST("/api/v1/conf/route/reload", func(ctx *gin.Context) { handlers.ReloadRoutes.Handler(ctx, dynamicRoutes) })
+	gatewayGroup.GET("/api/v1/int/conf/route", handlers.Routes.GetAllRoutes.Handler)
+	gatewayGroup.POST("/api/v1/int/conf/route", handlers.Routes.SaveRoute.Handler)
+	gatewayGroup.PUT("/api/v1/int/conf/route", handlers.Routes.UpdateRoute.Handler)
+	gatewayGroup.POST("/api/v1/int/conf/route/reload", func(ctx *gin.Context) { handlers.Routes.ReloadRoutes.Handler(ctx, dynamicRoutes) })
 
+	//API Authorization methods
+	authGroup := r.Group("/authorization/api/v2")
+	authGroupInternal := authGroup.Group("/int")
+	authGroupInternal.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
+
+	authGroupExternal := authGroup.Group("/ext")
+	authGroupExternal.POST("/auth/validate", handlers.Auth.Validate.Handler)
 }

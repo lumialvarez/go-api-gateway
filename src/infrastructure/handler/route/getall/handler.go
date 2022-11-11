@@ -2,16 +2,12 @@ package getallRoutes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall/contract"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall/mapper"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 	"github.com/lumialvarez/go-common-tools/http/apierrors"
 	"github.com/lumialvarez/go-common-tools/http/handlers"
 	"net/http"
 )
-
-type Mapper interface {
-	ToDTOs(domainRoutes []route.Route) []contract.GetRouteResponse
-}
 
 type UseCase interface {
 	Execute() (*[]route.Route, error)
@@ -22,13 +18,13 @@ type ApiResponseProvider interface {
 }
 
 type Handler struct {
-	mapper              Mapper
+	mapper              mapper.Mapper
 	useCase             UseCase
 	apiResponseProvider ApiResponseProvider
 }
 
-func NewHandler(mapper Mapper, useCase UseCase, apiResponseProvider ApiResponseProvider) Handler {
-	return Handler{mapper: mapper, useCase: useCase, apiResponseProvider: apiResponseProvider}
+func NewHandler(useCase UseCase, apiResponseProvider ApiResponseProvider) Handler {
+	return Handler{useCase: useCase, apiResponseProvider: apiResponseProvider}
 }
 
 func (h Handler) Handler(ginCtx *gin.Context) {

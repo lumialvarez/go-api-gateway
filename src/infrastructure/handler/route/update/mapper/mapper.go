@@ -1,4 +1,4 @@
-package mapperUpdateRoute
+package mapper
 
 import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/update/contract"

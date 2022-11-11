@@ -1,4 +1,4 @@
-package mapperSaveRoute
+package mapper
 
 import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/save/contract"
