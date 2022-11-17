@@ -1,9 +1,9 @@
-package handlerLoginAuth
+package handlerRegisterAuth
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/login/contract"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/login/mapper"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/register/contract"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/register/mapper"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/authentication"
 	"github.com/lumialvarez/go-common-tools/http/apierrors"
 	"github.com/lumialvarez/go-common-tools/http/handlers"
@@ -38,13 +38,13 @@ func (h Handler) Handler(ginCtx *gin.Context) {
 }
 
 func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
-	var request contract.LoginAuthRequest
+	var request contract.RegisterAuthRequest
 	if err := ctx.BindJSON(&request); err != nil {
 		return apierrors.NewBadRequestError(invalidFormat, err.Error())
 	}
 	serviceRequest := h.mapper.ToServiceRequest(request)
 
-	serviceResponse, err := h.authenticationService.AuthServiceClient.Client.Login(ctx, &serviceRequest)
+	serviceResponse, err := h.authenticationService.AuthServiceClient.Client.Register(ctx, &serviceRequest)
 	if err != nil {
 		log.Println("Error requesting to authorization service:", err)
 		return handlers.ToAPIError(err)

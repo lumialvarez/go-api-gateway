@@ -49,7 +49,7 @@ func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
 		log.Println("Error requesting to authorization service:", err)
 		return handlers.ToAPIError(err)
 	}
-	response := h.mapper.ToDTOResponse(*serviceResponse)
+	response := h.mapper.ToDTOResponse(serviceResponse)
 
 	ctx.JSON(http.StatusOK, response)
 

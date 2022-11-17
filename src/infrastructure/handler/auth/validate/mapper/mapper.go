@@ -12,7 +12,7 @@ func (m Mapper) ToServiceRequest(dto contract.ValidateAuthRequest) pb.ValidateRe
 	return pb.ValidateRequest{Token: dto.Token}
 }
 
-func (m Mapper) ToDTOResponse(dto pb.ValidateResponse) contract.ValidateAuthResponse {
+func (m Mapper) ToDTOResponse(dto *pb.ValidateResponse) contract.ValidateAuthResponse {
 	return contract.ValidateAuthResponse{
 		UserId:   dto.UserId,
 		UserName: dto.UserName,

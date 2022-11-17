@@ -15,7 +15,7 @@ func (m Mapper) ToServiceRequest(dto contract.LoginAuthRequest) pb.LoginRequest 
 	}
 }
 
-func (m Mapper) ToDTOResponse(dto pb.LoginResponse) contract.LoginAuthResponse {
+func (m Mapper) ToDTOResponse(dto *pb.LoginResponse) contract.LoginAuthResponse {
 	return contract.LoginAuthResponse{
 		Token:    dto.Token,
 		UserId:   dto.UserId,
