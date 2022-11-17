@@ -3,6 +3,7 @@ package devapi
 import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler"
+	handlerLoginAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/login"
 	handlerValidateAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/validate"
 	handlerErrors "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/error"
 	getallRoutes "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall"
@@ -31,6 +32,7 @@ type Routes struct {
 }
 
 type Auth struct {
+	Login    handler.Handler
 	Validate handler.Handler
 }
 
@@ -48,6 +50,7 @@ func LoadDependencies(config config.Config) DependenciesContainer {
 			UpdateRoute:  newUpdateRouteHandler(apiProvider, repositoryRoutes),
 		},
 		Auth: Auth{
+			Login:    newLoginAuthHandler(apiProvider, authServiceClient),
 			Validate: newValidateAuthHandler(apiProvider, authServiceClient),
 		},
 	}
@@ -75,6 +78,10 @@ func newUpdateRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repos
 	useCase := updateRoute.NewUseCaseUpdateRoute(&repository)
 
 	return handlerUpdateRoute.NewHandler(useCase, apiProvider)
+}
+
+func newLoginAuthHandler(apiProvider *handlerErrors.APIResponseProvider, authServiceClient *authentication.ServiceClient) handler.Handler {
+	return handlerLoginAuth.NewHandler(apiProvider, handlerLoginAuth.Authentication{AuthServiceClient: authServiceClient})
 }
 
 func newValidateAuthHandler(apiProvider *handlerErrors.APIResponseProvider, authServiceClient *authentication.ServiceClient) handler.Handler {

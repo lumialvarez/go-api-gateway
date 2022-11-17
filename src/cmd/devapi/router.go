@@ -33,4 +33,5 @@ func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRou
 
 	authGroupExternal := authGroup.Group("/ext")
 	authGroupExternal.POST("/auth/validate", handlers.Auth.Validate.Handler)
+	authGroupExternal.POST("/auth/login", handlers.Auth.Login.Handler)
 }
