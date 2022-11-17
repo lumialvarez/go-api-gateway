@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/lumialvarez/go-common-tools v1.1.0
+	github.com/lumialvarez/go-common-tools v1.2.0
 	github.com/lumialvarez/go-grpc-auth-service v0.0.2
 	github.com/spf13/viper v1.12.0
 	google.golang.org/grpc v1.50.1
