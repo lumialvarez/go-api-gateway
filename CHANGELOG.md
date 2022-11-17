@@ -2,8 +2,10 @@
 API Gateway
 
 ## [Unreleased]
-- gRCP Calls
-- Enable auth service integration
+
+## [1.3.0] - 16/11/2022
+### Fixed
+- Integration with authorization service
 
 ## [1.2.1] - 14/10/2022
 ### Fixed
