@@ -1,4 +1,4 @@
-package mapperGetAllRoutes
+package mapper
 
 import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall/contract"

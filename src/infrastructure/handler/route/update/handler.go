@@ -3,18 +3,15 @@ package handlerUpdateRoute
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/update/contract"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/tools/handlers"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/update/mapper"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 	"github.com/lumialvarez/go-common-tools/http/apierrors"
+	"github.com/lumialvarez/go-common-tools/http/handlers"
 )
 
 const (
 	invalidFormat string = "invalid_message_format"
 )
-
-type Mapper interface {
-	ToDomain(dtoRoute contract.UpdateRouteRequest) route.Route
-}
 
 type UseCase interface {
 	Execute(route route.Route) error
@@ -24,19 +21,14 @@ type ApiResponseProvider interface {
 	ToAPIResponse(err error, cause ...string) *apierrors.APIError
 }
 
-type AuthenticationService interface {
-	IsAuthorized(ctx *gin.Context) (bool, error)
-}
-
 type Handler struct {
-	mapper                Mapper
-	useCase               UseCase
-	apiResponseProvider   ApiResponseProvider
-	authenticationService AuthenticationService
+	mapper              mapper.Mapper
+	useCase             UseCase
+	apiResponseProvider ApiResponseProvider
 }
 
-func NewHandler(mapper Mapper, useCase UseCase, apiResponseProvider ApiResponseProvider, authenticationService AuthenticationService) Handler {
-	return Handler{mapper: mapper, useCase: useCase, apiResponseProvider: apiResponseProvider, authenticationService: authenticationService}
+func NewHandler(useCase UseCase, apiResponseProvider ApiResponseProvider) Handler {
+	return Handler{useCase: useCase, apiResponseProvider: apiResponseProvider}
 }
 
 func (h Handler) Handler(ginCtx *gin.Context) {
@@ -44,9 +36,6 @@ func (h Handler) Handler(ginCtx *gin.Context) {
 }
 
 func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
-	if authorized, err := h.authenticationService.IsAuthorized(ctx); !authorized || err != nil {
-		return apierrors.NewUnauthorizedError("Not Authorized")
-	}
 	var request contract.UpdateRouteRequest
 	if err := ctx.BindJSON(&request); err != nil {
 		return apierrors.NewBadRequestError(invalidFormat, err.Error())

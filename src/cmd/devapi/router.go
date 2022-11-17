@@ -8,25 +8,31 @@ import (
 )
 
 func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route.Route) {
-
-	//Map all http dynamic Routes
-	generic.RegisterHttpRoutes(r, dynamicRoutes)
-
 	handlers := LoadDependencies(config)
 
-	registerEndpoints(r, handlers, dynamicRoutes)
+	//Map all http dynamic Routes
+	generic.RegisterHttpRoutes(r, handlers.AuthorizationMiddleware.AuthRequired, dynamicRoutes)
 
-	//authSvc := *auth.ConfigureRoutes(r, &config)
-	//product.ConfigureRoutes(r, &config, &authSvc)
+	registerEndpoints(r, handlers, dynamicRoutes)
 }
 
 func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRoutes *[]route.Route) {
 
 	//API gateway methods
 	gatewayGroup := r.Group("/gateway")
-	gatewayGroup.GET("/api/v1/conf/route", handlers.GetAllRoutes.Handler)
-	gatewayGroup.POST("/api/v1/conf/route", handlers.SaveRoute.Handler)
-	gatewayGroup.PUT("/api/v1/conf/route", handlers.UpdateRoute.Handler)
-	gatewayGroup.POST("/api/v1/conf/route/reload", func(ctx *gin.Context) { handlers.ReloadRoutes.Handler(ctx, dynamicRoutes) })
+	gatewayGroup.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
+	gatewayGroup.GET("/api/v1/int/conf/route", handlers.Routes.GetAllRoutes.Handler)
+	gatewayGroup.POST("/api/v1/int/conf/route", handlers.Routes.SaveRoute.Handler)
+	gatewayGroup.PUT("/api/v1/int/conf/route", handlers.Routes.UpdateRoute.Handler)
+	gatewayGroup.POST("/api/v1/int/conf/route/reload", func(ctx *gin.Context) { handlers.Routes.ReloadRoutes.Handler(ctx, dynamicRoutes) })
 
+	//API Authorization methods
+	authGroup := r.Group("/authorization/api/v2")
+	authGroupInternal := authGroup.Group("/int")
+	authGroupInternal.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
+	authGroupInternal.POST("/auth/user", handlers.Auth.Register.Handler)
+
+	authGroupExternal := authGroup.Group("/ext")
+	authGroupExternal.POST("/auth/validate", handlers.Auth.Validate.Handler)
+	authGroupExternal.POST("/auth/login", handlers.Auth.Login.Handler)
 }
