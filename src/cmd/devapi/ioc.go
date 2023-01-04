@@ -3,8 +3,10 @@ package devapi
 import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler"
+	handlerListAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/list"
 	handlerLoginAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/login"
 	handlerRegisterAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/register"
+	handlerUpdateAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/update"
 	handlerValidateAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/validate"
 	handlerErrors "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/error"
 	getallRoutes "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall"
@@ -36,6 +38,8 @@ type Auth struct {
 	Login    handler.Handler
 	Register handler.Handler
 	Validate handler.Handler
+	List     handler.Handler
+	Update   handler.Handler
 }
 
 func LoadDependencies(config config.Config) DependenciesContainer {
@@ -52,9 +56,11 @@ func LoadDependencies(config config.Config) DependenciesContainer {
 			UpdateRoute:  newUpdateRouteHandler(apiProvider, repositoryRoutes),
 		},
 		Auth: Auth{
-			Login:    newLoginAuthHandler(apiProvider, authServiceClient),
-			Register: newRegisterAuthHandler(apiProvider, authServiceClient),
-			Validate: newValidateAuthHandler(apiProvider, authServiceClient),
+			Login:    handlerLoginAuth.NewHandler(apiProvider, handlerLoginAuth.Authentication{AuthServiceClient: authServiceClient}),
+			Register: handlerRegisterAuth.NewHandler(apiProvider, handlerRegisterAuth.Authentication{AuthServiceClient: authServiceClient}),
+			Validate: handlerValidateAuth.NewHandler(apiProvider, handlerValidateAuth.Authentication{AuthServiceClient: authServiceClient}),
+			List:     handlerListAuth.NewHandler(apiProvider, handlerListAuth.Authentication{AuthServiceClient: authServiceClient}),
+			Update:   handlerUpdateAuth.NewHandler(apiProvider, handlerUpdateAuth.Authentication{AuthServiceClient: authServiceClient}),
 		},
 	}
 }
@@ -81,16 +87,4 @@ func newUpdateRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repos
 	useCase := updateRoute.NewUseCaseUpdateRoute(&repository)
 
 	return handlerUpdateRoute.NewHandler(useCase, apiProvider)
-}
-
-func newLoginAuthHandler(apiProvider *handlerErrors.APIResponseProvider, authServiceClient *authentication.ServiceClient) handler.Handler {
-	return handlerLoginAuth.NewHandler(apiProvider, handlerLoginAuth.Authentication{AuthServiceClient: authServiceClient})
-}
-
-func newRegisterAuthHandler(apiProvider *handlerErrors.APIResponseProvider, authServiceClient *authentication.ServiceClient) handler.Handler {
-	return handlerRegisterAuth.NewHandler(apiProvider, handlerRegisterAuth.Authentication{AuthServiceClient: authServiceClient})
-}
-
-func newValidateAuthHandler(apiProvider *handlerErrors.APIResponseProvider, authServiceClient *authentication.ServiceClient) handler.Handler {
-	return handlerValidateAuth.NewHandler(apiProvider, handlerValidateAuth.Authentication{AuthServiceClient: authServiceClient})
 }

@@ -26,6 +26,7 @@ pipeline {
                currentBuild.displayName = "#" + currentBuild.number + " - v" + APP_VERSION
             }
             script{
+                if(currentBuild.previousSuccessfulBuild) {
                     lastBuild = currentBuild.previousSuccessfulBuild.displayName.replaceFirst(/^#[0-9]+ - v/, "")
                     echo "Last success version: ${lastBuild} \nNew version to deploy: ${APP_VERSION}"
                     if(lastBuild == APP_VERSION)  {
@@ -33,6 +34,7 @@ pipeline {
                          error("Aborted: A version that already exists cannot be deployed a second time")
                     }
                 }
+            }
          }
       }
       stage('Test') {
@@ -54,16 +56,16 @@ pipeline {
       stage('Deploy') {
          steps {
              //script_internal_ip.sh -> ip route | awk '/docker0 /{print $9}'
-                script {
-                    INTERNAL_IP = sh (
-                        script: '''ssh ${SSH_MAIN_SERVER} 'sudo bash script_internal_ip.sh' ''',
-                        returnStdout: true
-                    ).trim()
-                }
+            script {
+                INTERNAL_IP = sh (
+                    script: '''ssh ${SSH_MAIN_SERVER} 'sudo bash script_internal_ip.sh' ''',
+                    returnStdout: true
+                ).trim()
+            }
 
-                sh "docker rm -f go-api-gateway &>/dev/null && echo \'Removed old container\' "
+            sh "docker rm -f go-api-gateway &>/dev/null && echo \'Removed old container\' "
 
-                sh "sleep 5s"
+            sh "sleep 5s"
 
             sh "docker run --name go-api-gateway --net=backend-services --add-host=lmalvarez.com:${INTERNAL_IP} -p 9191:9191 -e SCOPE='prod' -d --restart unless-stopped lmalvarez/go-api-gateway:${APP_VERSION}"
          }
