@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.4.1] - 04/01/2023
+### Fixed
+- Integration with authorization service with generic handler (all methods)
+
 ## [1.4.0] - 03/01/2023
 ### Added
 - Integration with authorization service (List and Update)

@@ -19,22 +19,22 @@ func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route
 func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRoutes *[]route.Route) {
 
 	//API gateway methods
-	gatewayGroup := r.Group("/gateway")
+	gatewayGroup := r.Group("/gateway/api/v1")
 	gatewayGroup.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
-	gatewayGroup.GET("/api/v1/int/conf/route", handlers.Routes.GetAllRoutes.Handler)
-	gatewayGroup.POST("/api/v1/int/conf/route", handlers.Routes.SaveRoute.Handler)
-	gatewayGroup.PUT("/api/v1/int/conf/route", handlers.Routes.UpdateRoute.Handler)
-	gatewayGroup.POST("/api/v1/int/conf/route/reload", func(ctx *gin.Context) { handlers.Routes.ReloadRoutes.Handler(ctx, dynamicRoutes) })
+	gatewayGroup.GET("/int/conf/route", handlers.Routes.GetAllRoutes.Handler)
+	gatewayGroup.POST("/int/conf/route", handlers.Routes.SaveRoute.Handler)
+	gatewayGroup.PUT("/int/conf/route", handlers.Routes.UpdateRoute.Handler)
+	gatewayGroup.POST("/int/conf/route/reload", func(ctx *gin.Context) { handlers.Routes.ReloadRoutes.Handler(ctx, dynamicRoutes) })
 
 	//API Authorization methods
-	authGroup := r.Group("/authorization/api/v2")
+	authGroup := r.Group("/authorization/api/v1")
 	authGroupInternal := authGroup.Group("/int")
 	authGroupInternal.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
-	authGroupInternal.POST("/auth/user", handlers.Auth.Register.Handler)
-	authGroupInternal.GET("/auth/user", handlers.Auth.List.Handler)
-	authGroupInternal.PUT("/auth/user", handlers.Auth.Update.Handler)
+	authGroupInternal.POST("/auth/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "register") })
+	authGroupInternal.GET("/auth/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "list") })
+	authGroupInternal.PUT("/auth/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "update") })
 
 	authGroupExternal := authGroup.Group("/ext")
-	authGroupExternal.POST("/auth/validate", handlers.Auth.Validate.Handler)
-	authGroupExternal.POST("/auth/login", handlers.Auth.Login.Handler)
+	authGroupExternal.POST("/auth/validate", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "validate") })
+	authGroupExternal.POST("/auth/login", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "login") })
 }
