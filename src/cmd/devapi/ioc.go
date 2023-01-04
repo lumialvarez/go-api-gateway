@@ -3,11 +3,7 @@ package devapi
 import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler"
-	handlerListAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/list"
-	handlerLoginAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/login"
-	handlerRegisterAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/register"
-	handlerUpdateAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/update"
-	handlerValidateAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/validate"
+	handlerGenericAuth "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/auth/generic"
 	handlerErrors "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/error"
 	getallRoutes "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/getall"
 	handlerRouteReload "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/reload"
@@ -35,11 +31,7 @@ type Routes struct {
 }
 
 type Auth struct {
-	Login    handler.Handler
-	Register handler.Handler
-	Validate handler.Handler
-	List     handler.Handler
-	Update   handler.Handler
+	Generic handler.HandlerParams
 }
 
 func LoadDependencies(config config.Config) DependenciesContainer {
@@ -56,11 +48,7 @@ func LoadDependencies(config config.Config) DependenciesContainer {
 			UpdateRoute:  newUpdateRouteHandler(apiProvider, repositoryRoutes),
 		},
 		Auth: Auth{
-			Login:    handlerLoginAuth.NewHandler(apiProvider, handlerLoginAuth.Authentication{AuthServiceClient: authServiceClient}),
-			Register: handlerRegisterAuth.NewHandler(apiProvider, handlerRegisterAuth.Authentication{AuthServiceClient: authServiceClient}),
-			Validate: handlerValidateAuth.NewHandler(apiProvider, handlerValidateAuth.Authentication{AuthServiceClient: authServiceClient}),
-			List:     handlerListAuth.NewHandler(apiProvider, handlerListAuth.Authentication{AuthServiceClient: authServiceClient}),
-			Update:   handlerUpdateAuth.NewHandler(apiProvider, handlerUpdateAuth.Authentication{AuthServiceClient: authServiceClient}),
+			Generic: handlerGenericAuth.NewHandler(apiProvider, handlerGenericAuth.Authentication{AuthServiceClient: authServiceClient}),
 		},
 	}
 }

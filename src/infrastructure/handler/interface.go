@@ -9,6 +9,10 @@ type Handler interface {
 	Handler(ginCtx *gin.Context)
 }
 
+type HandlerParams interface {
+	Handler(ginCtx *gin.Context, params ...string)
+}
+
 type Routes interface {
 	Handler(ctx *gin.Context, routes *[]domainRoute.Route)
 }
