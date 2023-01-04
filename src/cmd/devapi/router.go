@@ -31,6 +31,8 @@ func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRou
 	authGroupInternal := authGroup.Group("/int")
 	authGroupInternal.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
 	authGroupInternal.POST("/auth/user", handlers.Auth.Register.Handler)
+	authGroupInternal.GET("/auth/user", handlers.Auth.List.Handler)
+	authGroupInternal.PUT("/auth/user", handlers.Auth.Update.Handler)
 
 	authGroupExternal := authGroup.Group("/ext")
 	authGroupExternal.POST("/auth/validate", handlers.Auth.Validate.Handler)
