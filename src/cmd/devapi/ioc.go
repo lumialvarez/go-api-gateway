@@ -10,7 +10,8 @@ import (
 	handlerSaveRoute "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/save"
 	handlerUpdateRoute "github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/route/update"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/authentication"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/grpc/auth"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/provider/authorization"
 	useCaseGetRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getall"
 	reloadRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/reload"
 	saveRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/save"
@@ -18,7 +19,7 @@ import (
 )
 
 type DependenciesContainer struct {
-	AuthorizationMiddleware authentication.Authentication
+	AuthorizationMiddleware authorization.Authentication
 	Routes                  Routes
 	Auth                    Auth
 }
@@ -37,8 +38,8 @@ type Auth struct {
 func LoadDependencies(config config.Config) DependenciesContainer {
 	repositoryRoutes := route.Init(config)
 	apiProvider := handlerErrors.NewAPIResponseProvider()
-	authServiceClient := authentication.InitServiceClient(&config)
-	authenticationService := authentication.NewAuthenticationService(authServiceClient)
+	authServiceClient := auth.InitServiceClient(&config)
+	authenticationService := authorization.NewAuthenticationService(authServiceClient)
 	return DependenciesContainer{
 		AuthorizationMiddleware: authenticationService,
 		Routes: Routes{

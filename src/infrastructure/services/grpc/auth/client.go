@@ -1,4 +1,4 @@
-package authentication
+package auth
 
 import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"

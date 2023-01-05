@@ -1,8 +1,9 @@
-package authentication
+package authorization
 
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/grpc/auth"
 	"github.com/lumialvarez/go-common-tools/http/apierrors"
 	"github.com/lumialvarez/go-common-tools/http/handlers"
 	"github.com/lumialvarez/go-grpc-auth-service/src/infrastructure/handler/grpc/auth/pb"
@@ -16,10 +17,10 @@ const (
 )
 
 type Authentication struct {
-	authServiceClient *ServiceClient
+	authServiceClient *auth.ServiceClient
 }
 
-func NewAuthenticationService(authServiceClient *ServiceClient) Authentication {
+func NewAuthenticationService(authServiceClient *auth.ServiceClient) Authentication {
 	return Authentication{authServiceClient: authServiceClient}
 }
 
