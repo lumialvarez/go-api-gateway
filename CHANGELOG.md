@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.5.0] - 04/01/2023
+### Added
+- Integration with profile service (List, Save and Update)
+
 ## [1.4.1] - 04/01/2023
 ### Fixed
 - Integration with authorization service with generic handler (all methods)

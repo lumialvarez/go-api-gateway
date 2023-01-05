@@ -30,11 +30,23 @@ func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRou
 	authGroup := r.Group("/authorization/api/v1")
 	authGroupInternal := authGroup.Group("/int")
 	authGroupInternal.Use(handlers.AuthorizationMiddleware.AuthRequiredAsAdmin)
-	authGroupInternal.POST("/auth/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "register") })
-	authGroupInternal.GET("/auth/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "list") })
-	authGroupInternal.PUT("/auth/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "update") })
+	authGroupInternal.POST("/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "register") })
+	authGroupInternal.GET("/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "list") })
+	authGroupInternal.PUT("/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "update") })
 
 	authGroupExternal := authGroup.Group("/ext")
-	authGroupExternal.POST("/auth/validate", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "validate") })
-	authGroupExternal.POST("/auth/login", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "login") })
+	authGroupExternal.POST("/user/validate", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "validate") })
+	authGroupExternal.POST("/user/login", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "login") })
+
+	//API Profile methods
+	profileGroup := r.Group("/profile/api/v1")
+	profileGroupInternal := profileGroup.Group("/int")
+	profileGroupInternal.Use(handlers.AuthorizationMiddleware.AuthRequired)
+	profileGroupInternal.GET("/profile", func(ctx *gin.Context) { handlers.Profile.Generic.Handler(ctx, "list") })
+	profileGroupInternal.POST("/profile", func(ctx *gin.Context) { handlers.Profile.Generic.Handler(ctx, "save") })
+	profileGroupInternal.PUT("/profile", func(ctx *gin.Context) { handlers.Profile.Generic.Handler(ctx, "update") })
+
+	profileGroupExternal := profileGroup.Group("/ext")
+	profileGroupExternal.GET("/profile", func(ctx *gin.Context) { handlers.Profile.Generic.Handler(ctx, "list") })
+
 }
