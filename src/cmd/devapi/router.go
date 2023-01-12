@@ -1,7 +1,6 @@
 package devapi
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/http/generic"
@@ -22,19 +21,6 @@ func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route
 
 	//Map internal and provider services
 	registerEndpoints(r, handlers, dynamicRoutes)
-}
-
-func guidMiddleware() gin.HandlerFunc {
-	//handlers.PrometheusMiddleware.PrometheusMiddleware
-	return func(c *gin.Context) {
-		uuid := "uuid.New()"
-		c.Set("uuid", uuid)
-		fmt.Printf("The request with uuid %s is started \n", uuid)
-		c.Next()
-
-		//statusCode := c.Request.Response.StatusCode
-		fmt.Printf("The request with uuid %s is served \n", uuid)
-	}
 }
 
 func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRoutes *[]route.Route) {
