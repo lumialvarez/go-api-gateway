@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.6.0] - 12/01/2023
+### Added
+- Prometheus metrics
+
 ## [1.5.0] - 04/01/2023
 ### Added
 - Integration with profile service (List, Save and Update)
