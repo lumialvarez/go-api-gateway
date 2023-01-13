@@ -13,6 +13,7 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/grpc/auth"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/grpc/profile"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/prometheus"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/provider/authorization"
 	useCaseGetRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getall"
 	reloadRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/reload"
@@ -22,6 +23,7 @@ import (
 
 type DependenciesContainer struct {
 	AuthorizationMiddleware authorization.Authentication
+	PrometheusMiddleware    prometheus.PrometheusProvider
 	Routes                  Routes
 	Auth                    Auth
 	Profile                 Profile
@@ -48,8 +50,10 @@ func LoadDependencies(config config.Config) DependenciesContainer {
 	authServiceClient := auth.InitServiceClient(&config)
 	profileServiceClient := profile.InitServiceClient(&config)
 	authenticationService := authorization.NewAuthenticationService(authServiceClient)
+	prometheusProvider := prometheus.NewPrometheusProvider()
 	return DependenciesContainer{
 		AuthorizationMiddleware: authenticationService,
+		PrometheusMiddleware:    prometheusProvider,
 		Routes: Routes{
 			GetAllRoutes: newGetAllRoutesHandler(apiProvider, repositoryRoutes),
 			ReloadRoutes: newReloadRoutesHandler(apiProvider, repositoryRoutes),

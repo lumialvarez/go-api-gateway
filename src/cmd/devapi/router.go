@@ -5,14 +5,21 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/http/generic"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route.Route) {
 	handlers := LoadDependencies(config)
 
+	// Prometheus endpoint
+	r.GET("/prometheus", gin.WrapH(promhttp.Handler()))
+
+	r.Use(handlers.PrometheusMiddleware.PrometheusMiddleware)
+
 	//Map all http dynamic Routes
 	generic.RegisterHttpRoutes(r, handlers.AuthorizationMiddleware.AuthRequired, dynamicRoutes)
 
+	//Map internal and provider services
 	registerEndpoints(r, handlers, dynamicRoutes)
 }
 
