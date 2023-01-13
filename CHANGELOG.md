@@ -2,7 +2,7 @@
 API Gateway
 
 ## [Unreleased]
-
+ 
 ## [1.6.0] - 12/01/2023
 ### Added
 - Prometheus metrics
