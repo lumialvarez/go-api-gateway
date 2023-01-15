@@ -13,8 +13,8 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/grpc/auth"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/grpc/profile"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/prometheus"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/provider/authorization"
+	"github.com/lumialvarez/go-api-gateway/src/infrastructure/services/provider/prometheus"
 	useCaseGetRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/getall"
 	reloadRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/reload"
 	saveRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/save"
@@ -23,7 +23,7 @@ import (
 
 type DependenciesContainer struct {
 	AuthorizationMiddleware authorization.Authentication
-	PrometheusMiddleware    prometheus.PrometheusProvider
+	PrometheusMiddleware    prometheus.Prometheus
 	Routes                  Routes
 	Auth                    Auth
 	Profile                 Profile
@@ -76,9 +76,9 @@ func newGetAllRoutesHandler(apiProvider *handlerErrors.APIResponseProvider, repo
 }
 
 func newReloadRoutesHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository) handler.Routes {
-	useCaseGetRoute := reloadRoute.NewUseCaseReloadRoute(&repository)
+	ucGetRoute := reloadRoute.NewUseCaseReloadRoute(&repository)
 
-	return handlerRouteReload.NewHandler(useCaseGetRoute, apiProvider)
+	return handlerRouteReload.NewHandler(ucGetRoute, apiProvider)
 }
 
 func newSaveRouteHandler(apiProvider *handlerErrors.APIResponseProvider, repository route.Repository) handler.Handler {
