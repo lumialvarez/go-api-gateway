@@ -2,7 +2,12 @@
 API Gateway
 
 ## [Unreleased]
- 
+
+## [1.6.1] - 14/01/2023
+### Fixed
+- Prometheus metric package
+- Total request by path metric is changed
+
 ## [1.6.0] - 12/01/2023
 ### Added
 - Prometheus metrics
