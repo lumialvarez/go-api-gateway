@@ -45,7 +45,7 @@ pipeline {
       }
       stage('Build') {
             steps {
-                sh "python replace-variables.py ${WORKSPACE}/src/cmd/devapi/config/envs/prod.env DATASOURCE_URL_CLEARED=${$DATASOURCE_URL_CLEARED} DATASOURCE_USERNAME=${DATASOURCE_USERNAME} DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}"
+                sh "python replace-variables.py ${WORKSPACE}/src/cmd/devapi/config/envs/prod.env DATASOURCE_URL_CLEARED=${DATASOURCE_URL_CLEARED} DATASOURCE_USERNAME=${DATASOURCE_USERNAME} DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}"
                 sh 'cat src/cmd/devapi/config/envs/prod.env'
 
                 sh "docker build . -t lmalvarez/go-api-gateway:${APP_VERSION}"

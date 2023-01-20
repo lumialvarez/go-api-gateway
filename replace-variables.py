@@ -36,7 +36,7 @@ def main():
     kwargs = {}
     for i in range(2, len(sys.argv)):
         key, value = sys.argv[i].split("=")
-        kwargs['#{' + key + '}#'] = value
+        kwargs['{' + key + '}'] = value
     replace_in_file(file_name, **kwargs)
 
 
