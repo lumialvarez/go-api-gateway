@@ -3,6 +3,11 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.6.2] - 20/01/2023
+### Fixed
+- Remove Deploy Stage
+- Change ReplaceSecrets.java to replace-variables.py
+
 ## [1.6.1] - 14/01/2023
 ### Fixed
 - Prometheus metric package
