@@ -2,10 +2,10 @@ package route
 
 import (
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
-	"github.com/lumialvarez/go-api-gateway/src/infrastructure/platform/postgresql"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route/dao"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route/mapper"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
+	"github.com/lumialvarez/go-common-tools/platform/postgresql"
 )
 
 type Repository struct {
@@ -14,7 +14,9 @@ type Repository struct {
 }
 
 func Init(config config.Config) Repository {
-	return Repository{postgresql: postgresql.Init(config.DBUrl), mapper: mapper.Mapper{}}
+	postgresqlClient := postgresql.Init(config.DBUrl)
+	postgresqlClient.DB.AutoMigrate(dao.Route{})
+	return Repository{postgresql: postgresqlClient, mapper: mapper.Mapper{}}
 }
 
 func (repository *Repository) GetAll() (*[]route.Route, error) {
