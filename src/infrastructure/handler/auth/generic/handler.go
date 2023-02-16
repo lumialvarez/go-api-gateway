@@ -7,6 +7,7 @@ import (
 	"github.com/lumialvarez/go-common-tools/http/apierrors"
 	"github.com/lumialvarez/go-common-tools/http/handlers"
 	"github.com/lumialvarez/go-grpc-auth-service/src/infrastructure/handler/grpc/auth/pb"
+	"google.golang.org/grpc/metadata"
 	"log"
 	"net/http"
 	"strconv"
@@ -57,6 +58,10 @@ func (h Handler) handler(ctx *gin.Context, params ...string) *apierrors.APIError
 		return h.performValidate(ctx)
 	case "list":
 		return h.performList(ctx)
+	case "current":
+		return h.performCurrent(ctx)
+	case "read_notification":
+		return h.performReadNotification(ctx)
 	default:
 		return apierrors.NewInternalServerError(internalServerError, "Adequate authorization method to perform not found")
 	}
@@ -108,6 +113,33 @@ func (h Handler) performList(ctx *gin.Context) *apierrors.APIError {
 	serviceRequest := h.mapper.ToListRequest(id, userName)
 
 	serviceResponse, err := h.authenticationService.AuthServiceClient.Client.List(ctx, &serviceRequest)
+	return manageResponse(ctx, serviceResponse, err)
+}
+
+func (h Handler) performCurrent(ctx *gin.Context) *apierrors.APIError {
+	authorization := ctx.Request.Header.Get("authorization")
+
+	additionalMetadata := metadata.Pairs("authorization", authorization)
+
+	ctxOutgoing := metadata.NewOutgoingContext(ctx, additionalMetadata)
+
+	serviceResponse, err := h.authenticationService.AuthServiceClient.Client.Current(ctxOutgoing, &pb.CurrentRequest{})
+
+	return manageResponse(ctx, serviceResponse, err)
+}
+
+func (h Handler) performReadNotification(ctx *gin.Context) *apierrors.APIError {
+	currentUserId, _ := ctx.Get("userId")
+
+	notificationId := ctx.Param("notificationId")
+
+	log.Println(currentUserId)
+	log.Println(notificationId)
+
+	serviceRequest := h.mapper.ToReadNotificationRequest(currentUserId, notificationId)
+
+	serviceResponse, err := h.authenticationService.AuthServiceClient.Client.ReadNotification(ctx, &serviceRequest)
+
 	return manageResponse(ctx, serviceResponse, err)
 }
 

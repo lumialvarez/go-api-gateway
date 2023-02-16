@@ -41,6 +41,9 @@ func registerEndpoints(r *gin.Engine, handlers DependenciesContainer, dynamicRou
 	authGroupInternal.GET("/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "list") })
 	authGroupInternal.PUT("/user", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "update") })
 
+	authGroupInternal.GET("/user/current/notification", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "current") })
+	authGroupInternal.PUT("/user/current/notification/:notificationId", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "read_notification") })
+
 	authGroupExternal := authGroup.Group("/ext")
 	authGroupExternal.POST("/user/validate", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "validate") })
 	authGroupExternal.POST("/user/login", func(ctx *gin.Context) { handlers.Auth.Generic.Handler(ctx, "login") })

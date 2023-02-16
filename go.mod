@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/lumialvarez/go-common-tools v1.5.0
+	github.com/lumialvarez/go-common-tools v1.5.1
 	github.com/lumialvarez/go-grpc-auth-service v1.1.0
 	github.com/lumialvarez/go-grpc-profile-service v1.0.0
 	github.com/prometheus/client_golang v1.14.0
@@ -56,4 +56,6 @@ require (
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/driver/postgres v1.4.6 // indirect
+	gorm.io/gorm v1.24.3 // indirect
 )

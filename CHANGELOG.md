@@ -4,6 +4,8 @@ API Gateway
 ## [Unreleased]
 
 ## [1.7.0] - 15/02/2023
+### Added
+- Integration with authorization service (notification)
 ### Fixed
 - Migrate postgresql client to Commons
 
