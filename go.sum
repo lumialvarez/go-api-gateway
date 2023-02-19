@@ -215,8 +215,8 @@ github.com/lumialvarez/go-common-tools v1.5.1 h1:kWYeC2CJOREx/A1kHiNtReoGU15Y/Ks
 github.com/lumialvarez/go-common-tools v1.5.1/go.mod h1:+KF6EPrFlXW6FutivUVXwaD9GFWI6QZIq13mr9DfQSM=
 github.com/lumialvarez/go-grpc-auth-service v1.1.0 h1:gSsfV84QYQXN2oq3OTEF1rsq1to+3juX8T9iTaq8//Q=
 github.com/lumialvarez/go-grpc-auth-service v1.1.0/go.mod h1:H+OwEMqScRkPQYBpyAF+I1cI2zNIS9xJCdh5BDtC06M=
-github.com/lumialvarez/go-grpc-profile-service v1.0.0 h1:5AGf21g/gThY1NnW02wXUizj/xPjTXgotql24vS6gVk=
-github.com/lumialvarez/go-grpc-profile-service v1.0.0/go.mod h1:PnEVwtBXqdwPH8E2iodZbcgpEpnmLc5x64vuv/fFgfY=
+github.com/lumialvarez/go-grpc-profile-service v1.1.0 h1:PinoEYX0NUSTWVUalMeBjBc03ACTRD1hvCFyQu9qiAk=
+github.com/lumialvarez/go-grpc-profile-service v1.1.0/go.mod h1:Atn4TwMHj5KJA+NYPpkwGmkshMtYr6kc+7hOVivaD/8=
 github.com/magiconair/properties v1.8.6 h1:5ibWZ6iY0NctNGWo87LalDlEZ6R41TqbbDamhfG/Qzo=
 github.com/magiconair/properties v1.8.6/go.mod h1:y3VJvCyxH9uVvJTWEGAELF3aiYNyPKd5NZ3oSwXrF60=
 github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=

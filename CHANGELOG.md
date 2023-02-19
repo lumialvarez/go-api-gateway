@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.7.1] - 18/02/2023
+### Fixed
+- Update Profile service version
+
 ## [1.7.0] - 15/02/2023
 ### Added
 - Integration with authorization service (notification)
