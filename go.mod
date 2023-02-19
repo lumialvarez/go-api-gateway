@@ -6,7 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/lumialvarez/go-common-tools v1.5.1
 	github.com/lumialvarez/go-grpc-auth-service v1.1.0
-	github.com/lumialvarez/go-grpc-profile-service v1.0.0
+	github.com/lumialvarez/go-grpc-profile-service v1.1.0
 	github.com/prometheus/client_golang v1.14.0
 	github.com/spf13/viper v1.12.0
 	google.golang.org/grpc v1.50.1
