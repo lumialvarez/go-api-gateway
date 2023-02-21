@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.7.4] - 20/02/2023
+### Fixed
+- CORS Allow Headers
+
 ## [1.7.3] - 20/02/2023
 ### Fixed
 - CORS Allow Method and max Age

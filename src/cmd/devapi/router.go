@@ -14,6 +14,7 @@ func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route
 	handlers := LoadDependencies(config)
 
 	r.Use(cors.New(cors.Config{
+		AllowHeaders:    []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With"},
 		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowAllOrigins: true,
 		MaxAge:          12 * time.Hour,
