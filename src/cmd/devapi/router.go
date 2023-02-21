@@ -7,13 +7,16 @@ import (
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/http/generic"
 	"github.com/lumialvarez/go-api-gateway/src/internal/route"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"time"
 )
 
 func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route.Route) {
 	handlers := LoadDependencies(config)
 
 	r.Use(cors.New(cors.Config{
+		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowAllOrigins: true,
+		MaxAge:          12 * time.Hour,
 	}))
 
 	// Prometheus endpoint
