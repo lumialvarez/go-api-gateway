@@ -1,6 +1,7 @@
 package devapi
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/handler/http/generic"
@@ -10,6 +11,10 @@ import (
 
 func ConfigureRoutes(r *gin.Engine, config config.Config, dynamicRoutes *[]route.Route) {
 	handlers := LoadDependencies(config)
+
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+	}))
 
 	// Prometheus endpoint
 	r.GET("/prometheus", gin.WrapH(promhttp.Handler()))
