@@ -1,7 +1,6 @@
 package route
 
 import (
-	"fmt"
 	"github.com/lumialvarez/go-api-gateway/src/cmd/devapi/config"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route/dao"
 	"github.com/lumialvarez/go-api-gateway/src/infrastructure/repository/postgresql/route/mapper"
@@ -15,8 +14,7 @@ type Repository struct {
 }
 
 func Init(config config.Config) Repository {
-	urlDataConnection := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", config.DBUser, config.DBPassword, config.DBUrl, config.DBPort, config.DBName)
-	postgresqlClient := postgresql.Init(urlDataConnection)
+	postgresqlClient := postgresql.Init(config.DBUrl)
 	postgresqlClient.DB.AutoMigrate(dao.Route{})
 	return Repository{postgresql: postgresqlClient, mapper: mapper.Mapper{}}
 }

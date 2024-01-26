@@ -11,11 +11,7 @@ type Config struct {
 	Port          string `mapstructure:"PORT"`
 	AuthSvcUrl    string `mapstructure:"AUTH_SVC_URL"`
 	ProfileSvcUrl string `mapstructure:"PROFILE_SVC_URL"`
-	DBUser        string
-	DBPassword    string
 	DBUrl         string
-	DBPort        string
-	DBName        string
 }
 
 func LoadConfig() (c Config, err error) {
@@ -40,11 +36,7 @@ func LoadConfig() (c Config, err error) {
 
 	err = viper.Unmarshal(&c)
 
-	c.DBUser = readEnvironmentVariable("DB_USER")
-	c.DBPassword = readEnvironmentVariable("DB_PASSWORD")
 	c.DBUrl = readEnvironmentVariable("DB_URL")
-	c.DBPort = readEnvironmentVariable("DB_PORT")
-	c.DBName = readEnvironmentVariable("DB_NAME")
 
 	return
 }
