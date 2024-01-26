@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 	"log"
 	"os"
@@ -8,9 +9,9 @@ import (
 
 type Config struct {
 	Port          string `mapstructure:"PORT"`
-	DBUrl         string `mapstructure:"DB_URL"`
 	AuthSvcUrl    string `mapstructure:"AUTH_SVC_URL"`
 	ProfileSvcUrl string `mapstructure:"PROFILE_SVC_URL"`
+	DBUrl         string
 }
 
 func LoadConfig() (c Config, err error) {
@@ -35,5 +36,15 @@ func LoadConfig() (c Config, err error) {
 
 	err = viper.Unmarshal(&c)
 
+	c.DBUrl = readEnvironmentVariable("DB_URL")
+
 	return
+}
+
+func readEnvironmentVariable(envName string) string {
+	envValue := os.Getenv(envName)
+	if len(envValue) == 0 {
+		panic(fmt.Sprintf("Environment Variable %s is not set", envName))
+	}
+	return envValue
 }

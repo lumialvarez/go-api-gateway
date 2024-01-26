@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.7.5] - 24/01/2024
+### Fixed
+- Add Github Action for pull request and create test
+
 ## [1.7.4] - 20/02/2023
 ### Fixed
 - CORS Allow Headers
