@@ -13,15 +13,18 @@ type Repository struct {
 	mapper     mapper.Mapper
 }
 
-func Init(config config.Config) Repository {
+func Init(config config.Config) (Repository, error) {
 	postgresqlClient := postgresql.Init(config.DBUrl)
-	postgresqlClient.DB.AutoMigrate(dao.Route{})
-	return Repository{postgresql: postgresqlClient, mapper: mapper.Mapper{}}
+	err := postgresqlClient.DB.AutoMigrate(dao.Route{})
+	if err != nil {
+		return Repository{}, err
+	}
+	return Repository{postgresql: postgresqlClient, mapper: mapper.Mapper{}}, nil
 }
 
 func (repository *Repository) GetAll() (*[]route.Route, error) {
 	var daoRoutes []dao.Route
-	result := repository.postgresql.DB.Find(&daoRoutes)
+	result := repository.postgresql.DB.Preload("Methods").Find(&daoRoutes)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -34,7 +37,7 @@ func (repository *Repository) GetAll() (*[]route.Route, error) {
 
 func (repository *Repository) GetAllEnabled() (*[]route.Route, error) {
 	var daoRoutes []dao.Route
-	result := repository.postgresql.DB.Where(&dao.Route{Enable: true}).Find(&daoRoutes)
+	result := repository.postgresql.DB.Preload("Methods").Where(&dao.Route{Enable: true}).Find(&daoRoutes)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -47,7 +50,7 @@ func (repository *Repository) GetAllEnabled() (*[]route.Route, error) {
 
 func (repository *Repository) GetById(id int64) (*route.Route, error) {
 	var daoRoute dao.Route
-	result := repository.postgresql.DB.Where(&dao.Route{Id: id}).First(&daoRoute)
+	result := repository.postgresql.DB.Preload("Methods").Where(&dao.Route{Id: id}).First(&daoRoute)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -68,11 +71,37 @@ func (repository *Repository) Save(route route.Route) error {
 func (repository *Repository) Update(route route.Route) error {
 	daoRoute := repository.mapper.ToDao(route)
 
-	result := repository.postgresql.DB.Model(&daoRoute).Where(&dao.Route{Id: daoRoute.Id}).Updates(
+	var presentMethods []dao.Method
+	result := repository.postgresql.DB.Find(&presentMethods)
+	if result.Error != nil {
+		return result.Error
+	}
+	methodsToUpdate := daoRoute.Methods
+	for i, inputMethod := range methodsToUpdate {
+		isPresent := false
+		for _, presentMethod := range presentMethods {
+			if inputMethod.Name == presentMethod.Name {
+				isPresent = true
+				methodsToUpdate[i] = &presentMethod
+				break
+			}
+		}
+		if !isPresent {
+			methodsToUpdate = append(methodsToUpdate, inputMethod)
+		}
+	}
+
+	err := repository.postgresql.DB.Model(&daoRoute).Association("Methods").Clear()
+	if err != nil {
+		return err
+	}
+
+	result = repository.postgresql.DB.Preload("Methods").Model(&daoRoute).Where(&dao.Route{Id: daoRoute.Id}).Updates(
 		map[string]interface{}{
 			"UrlTarget": daoRoute.UrlTarget,
 			"Secure":    daoRoute.Secure,
 			"Enable":    daoRoute.Enable,
+			"Methods":   methodsToUpdate,
 		})
 	if result.Error != nil {
 		return result.Error

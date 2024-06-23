@@ -9,8 +9,13 @@ type Mapper struct {
 }
 
 func (m Mapper) ToDTOs(domainRoutes []route.Route) []contract.GetRouteResponse {
-	var dtoRoutes []contract.GetRouteResponse
+	dtoRoutes := make([]contract.GetRouteResponse, 0)
 	for _, domainRoute := range domainRoutes {
+		dtoMethods := make([]string, 0)
+		for _, domainMethod := range domainRoute.Methods() {
+			dtoMethods = append(dtoMethods, domainMethod.Value())
+		}
+
 		tmpDTO := contract.GetRouteResponse{
 			Id:           domainRoute.Id(),
 			RelativePath: domainRoute.RelativePath(),
@@ -18,6 +23,7 @@ func (m Mapper) ToDTOs(domainRoutes []route.Route) []contract.GetRouteResponse {
 			TypeTarget:   domainRoute.TypeTarget(),
 			Secure:       domainRoute.Secure(),
 			Enable:       domainRoute.Enable(),
+			Methods:      dtoMethods,
 		}
 		dtoRoutes = append(dtoRoutes, tmpDTO)
 	}

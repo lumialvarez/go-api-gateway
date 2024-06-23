@@ -30,7 +30,10 @@ func Start() {
 }
 
 func loadRoutes(config config.Config) (*[]domainRoute.Route, error) {
-	routeRepository := route.Init(config)
+	routeRepository, err := route.Init(config)
+	if err != nil {
+		return nil, err
+	}
 	useCaseGetRoute := getall.NewUseCaseGetRoute(&routeRepository)
 	routes, err := useCaseGetRoute.Execute()
 	return routes, err
