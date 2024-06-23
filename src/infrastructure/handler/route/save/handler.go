@@ -40,9 +40,12 @@ func (h Handler) handler(ctx *gin.Context) *apierrors.APIError {
 	if err := ctx.BindJSON(&request); err != nil {
 		return apierrors.NewBadRequestError(invalidFormat, err.Error())
 	}
-	domainRoute := h.mapper.ToDomain(request)
+	domainRoute, err := h.mapper.ToDomain(request)
+	if err != nil {
+		return apierrors.NewBadRequestError(invalidFormat, err.Error())
+	}
 
-	err := h.useCase.Execute(domainRoute)
+	err = h.useCase.Execute(domainRoute)
 	if err != nil {
 		return h.apiResponseProvider.ToAPIResponse(err)
 	}
