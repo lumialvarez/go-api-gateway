@@ -3,6 +3,10 @@ API Gateway
 
 ## [Unreleased]
 
+## [1.9.0] - 22/06/2024
+### Added
+- Add http methods in routes
+
 ## [1.8.0] - 05/06/2024
 ### Added
 - Add GitHub Action force to update changelog

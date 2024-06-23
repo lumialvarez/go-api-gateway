@@ -19,6 +19,7 @@ import (
 	reloadRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/reload"
 	saveRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/save"
 	updateRoute "github.com/lumialvarez/go-api-gateway/src/internal/route/usecase/update"
+	"log"
 )
 
 type DependenciesContainer struct {
@@ -45,7 +46,10 @@ type Profile struct {
 }
 
 func LoadDependencies(config config.Config) DependenciesContainer {
-	repositoryRoutes := route.Init(config)
+	repositoryRoutes, err := route.Init(config)
+	if err != nil {
+		log.Fatalln("Failed to initialize Route repository ", err)
+	}
 	apiProvider := handlerErrors.NewAPIResponseProvider()
 	authServiceClient := auth.InitServiceClient(&config)
 	profileServiceClient := profile.InitServiceClient(&config)
