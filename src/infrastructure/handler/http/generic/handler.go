@@ -46,7 +46,6 @@ func RegisterHttpRoutes(r *gin.Engine, authorizationFunction gin.HandlerFunc, ro
 				genericGroup.Use(authorizationFunction)
 			}
 			genericGroup.Match(routeItem.GetStringMethods(), anyRelativePath, genericHandler)
-
 		}
 	}
 }
